@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app/app.tsx';
 
-const Setting = {
-  OffersCount: 10
-} as const;
+/*
+Settings был убран из-за сообщения Линтера в App.
+До этого задания 7 8 9 были выполнены так, как было сказано в учебном задании
+ */
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -12,8 +13,6 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App
-      offersCount = {Setting.OffersCount}
-    />
+    <App />
   </React.StrictMode>
 );

@@ -1,12 +1,12 @@
-import MainPageScreen from '../../pages/main-page-screen/main-page-screen.tsx';
+import MainPageScreen from '../../pages/main-page-screen/main-page-screen';
 
-type AppScreenProps = {
-  offersCount: number;
-}
+const Setting = {
+  OffersCount: 10,
+} as const;
 
-function App({ offersCount } : AppScreenProps): JSX.Element {
+function App(): JSX.Element {
   return (
-    <MainPageScreen offersCount={offersCount} />
+    <MainPageScreen offersCount={Setting.OffersCount} />
   );
 }
 
