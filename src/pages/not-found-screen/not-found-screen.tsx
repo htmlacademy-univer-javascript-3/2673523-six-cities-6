@@ -1,4 +1,6 @@
 import Logo from '../../components/logo/logo.tsx';
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../const.ts';
 
 
 function NotFoundScreen() : JSX.Element {
@@ -17,7 +19,7 @@ function NotFoundScreen() : JSX.Element {
           <section className="not-found">
             <h1 className="not-found__title">Page not found</h1>
             <p className="not-found__text">
-              You can go to <a href="main.html">main page</a>.
+              You can go to <Link to={AppRoute.Root}>main page</Link>.
             </p>
           </section>
         </div>
