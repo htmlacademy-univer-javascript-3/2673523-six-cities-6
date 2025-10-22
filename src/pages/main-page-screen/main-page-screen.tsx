@@ -1,11 +1,14 @@
-import PlaceCard from '../../components/place-card/place-card.tsx';
 import Logo from '../../components/logo/logo.tsx';
+import PlacesList from '../../components/places-list/places-list.tsx';
+import { FullOffers } from '../../types/offer-info.ts';
 
 type MainPageScreenProps= {
-  offersCount: number;
+  offers: FullOffers;
 }
 
-function MainPageScreen({ offersCount } : MainPageScreenProps): JSX.Element {
+function MainPageScreen({ offers } : MainPageScreenProps): JSX.Element {
+  const offersCount = offers.length;
+  const cityName = offersCount > 0 ? offers[0].city.name : 'No offers';
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -75,7 +78,7 @@ function MainPageScreen({ offersCount } : MainPageScreenProps): JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offersCount} places to stay in Amsterdam</b>
+              <b className="places__found">{offersCount} places to stay in {cityName}</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -92,11 +95,7 @@ function MainPageScreen({ offersCount } : MainPageScreenProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                <PlaceCard />
-                <PlaceCard />
-                <PlaceCard />
-                <PlaceCard />
-                <PlaceCard />
+                <PlacesList offers={offers} />
               </div>
             </section>
             <div className="cities__right-section">
