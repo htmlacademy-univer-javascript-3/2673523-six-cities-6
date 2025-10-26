@@ -16,16 +16,17 @@ import { FullOffers } from '../../types/offer-info.ts';
 import {AppRoute, AuthStatus} from '../../const.ts';
 
 
-function App(): JSX.Element {
+function App() {
   const FullOffersList: FullOffers = useMemo(() => offers.map((offer) => {
     const city = cities.find((c) => c.name === offer.cityName);
     const host = hosts.find((h) => h.id === offer.hostId);
     if (!city || !host) {
       throw new Error(`Data assembling error for offer id: ${offer.id}`);
     }
+    // Небольшой комментарий к ревью - массив зависимостей пустой не просто так - линтер
+    // говорит о том, что изменение offers, cities, hosts повторный рендер не вызовет
 
-    const { ...rest } = offer;
-    return { ...rest, city, host };
+    return { ...offer, city, host };
   }), []);
 
   return (
