@@ -1,13 +1,41 @@
 import Logo from '../../components/logo/logo.tsx';
 import PlacesList from '../../components/places-list/places-list.tsx';
-import { FullOffers } from '../../types/offer-info.ts';
+import {City, FullOffer, FullOffers} from '../../types/offer-info.ts';
+import {useState} from 'react';
+import {Point} from '../../types/map-types.ts';
+import Map from '../../components/map/map.tsx';
 
 type MainPageScreenProps= {
   offers: FullOffers;
 }
 
 function MainPageScreen({ offers } : MainPageScreenProps): JSX.Element {
+  const [activeOffer, setActiveOffer] = useState<FullOffer | undefined>(undefined);
+
   const offersCount = offers.length;
+  const city: City | undefined = offers[0]?.city;
+
+  const handleCardHover = (offerId: string | null) => {
+    const currentOffer = offers.find((offer) => offer.id === offerId);
+    setActiveOffer(currentOffer);
+  };
+
+
+  const points: Point[] = offers.map((offer) => ({
+    title: offer.title,
+    lat: offer.location.latitude,
+    lng: offer.location.longitude,
+  }));
+
+
+  const selectedPoint: Point | undefined = activeOffer
+    ? {
+      title: activeOffer.title,
+      lat: activeOffer.location.latitude,
+      lng: activeOffer.location.longitude,
+    }
+    : undefined;
+
   const cityName = offersCount > 0 ? offers[0].city.name : 'No offers';
   return (
     <div className="page page--gray page--main">
@@ -95,11 +123,21 @@ function MainPageScreen({ offers } : MainPageScreenProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                <PlacesList offers={offers} />
+                <PlacesList
+                  offers={offers}
+                  onCardHover={handleCardHover}
+                  activeOfferId={activeOffer ? activeOffer.id : null}
+                />
               </div>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <section className="cities__map map">
+                <Map
+                  city={city}
+                  points={points}
+                  selectedPoint={selectedPoint}
+                />
+              </section>
             </div>
           </div>
         </div>

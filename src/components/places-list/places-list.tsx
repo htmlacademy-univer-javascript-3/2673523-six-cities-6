@@ -1,26 +1,25 @@
-import { useState } from 'react';
-import PlaceCard from '../place-card/place-card';
-import { FullOffers } from '../../types/offer-info';
+import PlaceCard from '../place-card/place-card.tsx';
+import { FullOffers } from '../../types/offer-info.ts';
 
 type PlacesListProps = {
   offers: FullOffers;
+  onCardHover: (offerId: string | null) => void;
+  activeOfferId: string | null;
 };
 
-function PlacesList({ offers }: PlacesListProps): JSX.Element {
-  const [activeCardId, setActiveCardId] = useState<string | null>(null);
-
+function PlacesList({ offers, onCardHover, activeOfferId }: PlacesListProps): JSX.Element {
   return (
-    <div className="cities__places-list places__list tabs__content">
+    <>
       {offers.map((offer) => (
         <PlaceCard
           key={offer.id}
           offer={offer}
-          onMouseEnter={() => setActiveCardId(offer.id)}
-          onMouseLeave={() => setActiveCardId(null)}
-          isActive={activeCardId === offer.id}
+          onMouseEnter={() => onCardHover(offer.id)}
+          onMouseLeave={() => onCardHover(null)}
+          isActive={offer.id === activeOfferId}
         />
       ))}
-    </div>
+    </>
   );
 }
 
