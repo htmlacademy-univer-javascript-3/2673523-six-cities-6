@@ -1,5 +1,6 @@
 import { useState, ChangeEvent, FormEvent, Fragment } from 'react';
 import {minCommentLength, maxCommentLength} from '../../const.ts';
+import {ReactNode} from 'react';
 
 const starRatings = [
   { value: 5, title: 'perfect' },
@@ -9,7 +10,7 @@ const starRatings = [
   { value: 1, title: 'terribly' },
 ];
 
-function CommentForm(): JSX.Element {
+function CommentForm(): ReactNode {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
 
