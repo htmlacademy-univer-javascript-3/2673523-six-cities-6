@@ -1,13 +1,15 @@
 import { useParams, Link } from 'react-router-dom';
 import Logo from '../../components/logo/logo.tsx';
-import { FullOffers, Reviews } from '../../types/offer-info.ts';
+import {FullOffer, FullOffers, Reviews} from '../../types/offer-info.ts';
 import NotFoundScreen from '../not-found-screen/not-found-screen.tsx';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
-import PlaceCard from '../../components/place-card/place-card.tsx';
 import ReviewList from '../../components/review-list/review-list.tsx';
 import { maxNearbyOffers } from '../../const.ts';
 import Map from '../../components/map/map.tsx';
 import { Point } from '../../types/map-types.ts';
+import {PlaceCardVariant} from '../../types/place-card-types.ts';
+import PlacesList from '../../components/places-list/places-list.tsx';
+import {useState} from 'react';
 
 type OfferScreenProps = {
   offers: FullOffers;
@@ -16,6 +18,7 @@ type OfferScreenProps = {
 
 function OfferScreen({ offers, reviews }: OfferScreenProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
+  const [activeNearbyOffer, setActiveNearbyOffer] = useState<FullOffer | undefined>(undefined);
 
   const currentOffer = offers.find((offer) => offer.id === id);
   const currentReviews = reviews.filter((review) => review.offerId === id);
@@ -28,6 +31,11 @@ function OfferScreen({ offers, reviews }: OfferScreenProps): JSX.Element {
     .filter((offer) => offer.city.name === currentOffer.city.name && offer.id !== currentOffer.id)
     .slice(0, maxNearbyOffers);
 
+  const handleNearbyCardHover = (offerId: string | null) => {
+    const newActiveOffer = nearbyOffers.find((offer) => offer.id === offerId);
+    setActiveNearbyOffer(newActiveOffer);
+  };
+
   const offersForMap = [...nearbyOffers, currentOffer];
   const city = currentOffer.city;
 
@@ -38,9 +46,9 @@ function OfferScreen({ offers, reviews }: OfferScreenProps): JSX.Element {
   }));
 
   const selectedPoint: Point = {
-    title: currentOffer.title,
-    lat: currentOffer.location.latitude,
-    lng: currentOffer.location.longitude,
+    title: activeNearbyOffer?.title || currentOffer.title,
+    lat: activeNearbyOffer?.location.latitude || currentOffer.location.latitude,
+    lng: activeNearbyOffer?.location.longitude || currentOffer.location.longitude,
   };
 
   const {images, isPremium, title, isFavorite, rating, type, bedrooms, maxAdults, price, goods, host, description,} = currentOffer;
@@ -158,9 +166,12 @@ function OfferScreen({ offers, reviews }: OfferScreenProps): JSX.Element {
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <div className="near-places__list places__list">
-              {nearbyOffers.map((offer) => (
-                <PlaceCard key={offer.id} offer={offer} />
-              ))}
+              <PlacesList
+                offers={nearbyOffers}
+                variant={PlaceCardVariant.NearPlaces}
+                onCardHover={handleNearbyCardHover}
+                activeOfferId={activeNearbyOffer?.id || null}
+              />
             </div>
           </section>
         </div>

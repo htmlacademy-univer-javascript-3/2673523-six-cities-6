@@ -1,16 +1,19 @@
 import { Link } from 'react-router-dom';
 import { FullOffer } from '../../types/offer-info.ts';
+import {PlaceCardConfigs, PlaceCardVariant} from '../../types/place-card-types.ts';
 
 type PlaceCardProps = {
   offer: FullOffer;
+  variant: PlaceCardVariant;
   onMouseEnter?: (id: string) => void;
   onMouseLeave?: () => void;
   isActive?: boolean;
 };
 
-function PlaceCard({ offer, onMouseEnter, onMouseLeave, isActive }: PlaceCardProps): JSX.Element {
+function PlaceCard({ offer, variant, onMouseEnter, onMouseLeave, isActive }: PlaceCardProps): JSX.Element {
   const { id, title, type, price, previewImage, isPremium, isFavorite, rating } = offer;
   const ratingWidth = `${Math.round(rating) * 20}%`;
+  const config = PlaceCardConfigs[variant];
 
   const handleMouseEnter = () => {
     onMouseEnter?.(id);
@@ -20,10 +23,11 @@ function PlaceCard({ offer, onMouseEnter, onMouseLeave, isActive }: PlaceCardPro
     onMouseLeave?.();
   };
 
-  const articleClassName = `cities__card place-card ${isActive ? 'place-card--active' : ''}`;
+  const articleClassName = `${config.classNamePref}__card place-card ${isActive ? 'place-card--active' : ''}`;
 
   return (
-    <article className={articleClassName}
+    <article
+      className={articleClassName}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -33,9 +37,15 @@ function PlaceCard({ offer, onMouseEnter, onMouseLeave, isActive }: PlaceCardPro
         </div>
       )}
 
-      <div className="cities__image-wrapper place-card__image-wrapper">
+      <div className={`${config.classNamePref}__image-wrapper place-card__image-wrapper`}>
         <Link to={`/offers/${id}`}>
-          <img className="place-card__image" src={previewImage} width="260" height="200" alt={title} />
+          <img
+            className="place-card__image"
+            src={previewImage}
+            width={config.image.width}
+            height={config.image.height}
+            alt={title}
+          />
         </Link>
       </div>
       <div className="place-card__info">

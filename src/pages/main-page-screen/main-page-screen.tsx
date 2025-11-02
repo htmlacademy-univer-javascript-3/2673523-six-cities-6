@@ -4,6 +4,7 @@ import {City, FullOffer, FullOffers} from '../../types/offer-info.ts';
 import {useState} from 'react';
 import {Point} from '../../types/map-types.ts';
 import Map from '../../components/map/map.tsx';
+import {PlaceCardVariant} from '../../types/place-card-types.ts';
 
 type MainPageScreenProps= {
   offers: FullOffers;
@@ -125,8 +126,9 @@ function MainPageScreen({ offers } : MainPageScreenProps): JSX.Element {
               <div className="cities__places-list places__list tabs__content">
                 <PlacesList
                   offers={offers}
+                  variant={PlaceCardVariant.Cities}
                   onCardHover={handleCardHover}
-                  activeOfferId={activeOffer ? activeOffer.id : null}
+                  activeOfferId={activeOffer?.id || null}
                 />
               </div>
             </section>
