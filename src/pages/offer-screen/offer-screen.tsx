@@ -5,8 +5,9 @@ import NotFoundScreen from '../not-found-screen/not-found-screen.tsx';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import PlaceCard from '../../components/place-card/place-card.tsx';
 import ReviewList from '../../components/review-list/review-list.tsx';
-import {maxNearbyOffers} from '../../const.ts';
-
+import { maxNearbyOffers } from '../../const.ts';
+import Map from '../../components/map/map.tsx';
+import { Point } from '../../types/map-types.ts';
 
 type OfferScreenProps = {
   offers: FullOffers;
@@ -26,6 +27,21 @@ function OfferScreen({ offers, reviews }: OfferScreenProps): JSX.Element {
   const nearbyOffers = offers
     .filter((offer) => offer.city.name === currentOffer.city.name && offer.id !== currentOffer.id)
     .slice(0, maxNearbyOffers);
+
+  const offersForMap = [...nearbyOffers, currentOffer];
+  const city = currentOffer.city;
+
+  const points: Point[] = offersForMap.map((offer) => ({
+    title: offer.title,
+    lat: offer.location.latitude,
+    lng: offer.location.longitude,
+  }));
+
+  const selectedPoint: Point = {
+    title: currentOffer.title,
+    lat: currentOffer.location.latitude,
+    lng: currentOffer.location.longitude,
+  };
 
   const {images, isPremium, title, isFavorite, rating, type, bedrooms, maxAdults, price, goods, host, description,} = currentOffer;
 
@@ -129,8 +145,14 @@ function OfferScreen({ offers, reviews }: OfferScreenProps): JSX.Element {
                 <CommentForm />
               </section >
             </div>
+            <section className="offer__map map">
+              <Map
+                city={city}
+                points={points}
+                selectedPoint={selectedPoint}
+              />
+            </section>
           </div>
-          <section className="offer__map map"></section>
         </section>
         <div className="container">
           <section className="near-places places">

@@ -23,8 +23,6 @@ function App() {
     if (!city || !host) {
       throw new Error(`Data assembling error for offer id: ${offer.id}`);
     }
-    // Небольшой комментарий к ревью - массив зависимостей пустой не просто так - линтер
-    // говорит о том, что изменение offers, cities, hosts повторный рендер не вызовет
 
     return { ...offer, city, host };
   }), []);
