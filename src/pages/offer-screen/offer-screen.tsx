@@ -4,6 +4,7 @@ import { FullOffers, Reviews } from '../../types/offer-info.ts';
 import NotFoundScreen from '../not-found-screen/not-found-screen.tsx';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import PlaceCard from '../../components/place-card/place-card.tsx';
+import ReviewList from '../../components/review-list/review-list.tsx';
 import {maxNearbyOffers} from '../../const.ts';
 
 
@@ -124,33 +125,9 @@ function OfferScreen({ offers, reviews }: OfferScreenProps): JSX.Element {
                 </div>
               </div>
               <section className="offer__reviews reviews">
-                <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{currentReviews.length}</span></h2>
-                <ul className="reviews__list">
-                  {currentReviews.map((review) => (
-                    <li key={review.id} className="reviews__item">
-                      <div className="reviews__user user">
-                        <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                          <img className="reviews__avatar user__avatar" src={`/${review.user.avatarUrl}`} width="54" height="54" alt="Reviews avatar" />
-                        </div>
-                        <span className="reviews__user-name">{review.user.name}</span>
-                      </div>
-                      <div className="reviews__info">
-                        <div className="reviews__rating rating">
-                          <div className="reviews__stars rating__stars">
-                            <span style={{ width: `${Math.round(review.rating) * 20}%` }}></span>
-                            <span className="visually-hidden">Rating</span>
-                          </div>
-                        </div>
-                        <p className="reviews__text">{review.comment}</p>
-                        <time className="reviews__time" dateTime={new Date(review.date).toISOString().substring(0, 10)}>
-                          {new Date(review.date).toLocaleString('en-US', { month: 'long', year: 'numeric' })}
-                        </time>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                <ReviewList reviews={currentReviews} />
                 <CommentForm />
-              </section>
+              </section >
             </div>
           </div>
           <section className="offer__map map"></section>

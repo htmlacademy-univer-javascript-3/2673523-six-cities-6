@@ -5,7 +5,6 @@ type PlaceCardProps = {
   offer: FullOffer;
   onMouseEnter?: (id: string) => void;
   onMouseLeave?: () => void;
-  //Пока что заглушка от сообщение линтера,т.к отображения маркеров предложений на карте будем делать позже
   isActive?: boolean;
 };
 
