@@ -49,9 +49,9 @@ function App() {
           path={AppRoute.Favourites}
           element={
             <PrivateRoute
-              authStatus={AuthStatus.NoAuth}
+              authStatus={AuthStatus.Auth}
             >
-              <FavouriteScreen offers={ FullOffersList }/>
+              <FavouriteScreen />
             </PrivateRoute>
           }
         />

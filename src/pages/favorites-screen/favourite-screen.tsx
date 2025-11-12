@@ -1,24 +1,30 @@
+import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { useAppSelector } from '../../hooks';
 import Logo from '../../components/logo/logo.tsx';
 import FavoriteCard from '../../components/favourite-card/favourite-card.tsx';
-import { FullOffers, FullOffer } from '../../types/offer-info.ts';
-import {Link} from 'react-router-dom';
-import {AppRoute} from '../../const.ts';
+import { FullOffer } from '../../types/offer-info.ts';
+import { AppRoute } from '../../const.ts';
 
-type FavouriteScreenProps = {
-  offers: FullOffers;
-}
+function FavouriteScreen(): JSX.Element {
+  const allOffers = useAppSelector((state) => state.offers);
 
-function FavouriteScreen({ offers }: FavouriteScreenProps): JSX.Element {
-  const favoriteOffers = offers.filter((offer) => offer.isFavorite);
+  const favoriteOffers = useMemo(
+    () => allOffers.filter((offer) => offer.isFavorite),
+    [allOffers]
+  );
 
-  const favoritesByCity = favoriteOffers.reduce<Record<string, FullOffer[]>>((acc, offer) => {
-    const city = offer.city.name;
-    if (!acc[city]) {
-      acc[city] = [];
-    }
-    acc[city].push(offer);
-    return acc;
-  }, {});
+  const favoritesByCity = useMemo(
+    () => favoriteOffers.reduce<Record<string, FullOffer[]>>((acc, offer) => {
+      const city = offer.city.name;
+      if (!acc[city]) {
+        acc[city] = [];
+      }
+      acc[city].push(offer);
+      return acc;
+    }, {}),
+    [favoriteOffers]
+  );
 
   return (
     <div className="page">
