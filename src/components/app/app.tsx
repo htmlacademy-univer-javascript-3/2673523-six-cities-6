@@ -15,7 +15,7 @@ import { hosts } from '../../mocks/hosts.ts';
 import { offers } from '../../mocks/offers.ts';
 import { FullOffers } from '../../types/offer-info.ts';
 import {AppRoute, AuthStatus} from '../../const.ts';
-import { loadOffers} from '../../store/actions.ts';
+import {loadOffers, loadReviews} from '../../store/actions.ts';
 
 function App() {
   const dispatch = useDispatch();
@@ -31,6 +31,7 @@ function App() {
 
   useEffect(() => {
     dispatch(loadOffers(FullOffersList));
+    dispatch(loadReviews(reviews));
   }, [dispatch, FullOffersList]);
 
   return (
@@ -56,7 +57,7 @@ function App() {
         />
         <Route
           path={AppRoute.Offers}
-          element={<OfferScreen offers={FullOffersList} reviews={reviews}/>}
+          element={<OfferScreen />}
         />
         <Route
           path="*"

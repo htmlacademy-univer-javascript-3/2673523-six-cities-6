@@ -1,16 +1,18 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {changeCity, loadOffers} from './actions.ts';
-import { FullOffers } from '../types/offer-info';
+import {changeCity, loadOffers, loadReviews} from './actions.ts';
+import {FullOffers, Reviews} from '../types/offer-info';
 import {InitCity} from '../const.ts';
 
 interface AppState {
   city: string;
   offers: FullOffers;
+  reviews: Reviews;
 }
 
 const initialState: AppState = {
   city: InitCity,
   offers: [],
+  reviews: []
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -20,6 +22,9 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(loadOffers, (state, action) => {
       state.offers = action.payload;
+    })
+    .addCase(loadReviews, (state, action) => {
+      state.reviews = action.payload;
     });
 });
 
