@@ -33,3 +33,7 @@ export const UrlMarkerCurrent =
 
 export const UrlMarkerDefault =
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
+
+export const Cities = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
+
+export const InitCity = 'Paris';

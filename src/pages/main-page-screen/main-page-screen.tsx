@@ -1,28 +1,42 @@
 import Logo from '../../components/logo/logo.tsx';
 import PlacesList from '../../components/places-list/places-list.tsx';
-import {City, FullOffer, FullOffers} from '../../types/offer-info.ts';
-import {useState} from 'react';
+import {City, FullOffer } from '../../types/offer-info.ts';
+import {useMemo, useState} from 'react';
 import {Point} from '../../types/map-types.ts';
 import Map from '../../components/map/map.tsx';
 import {PlaceCardVariant} from '../../types/place-card-types.ts';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {changeCity} from '../../store/actions.ts';
+import CitiesList from '../../components/cities-list/cities-list.tsx';
 
-type MainPageScreenProps= {
-  offers: FullOffers;
-}
 
-function MainPageScreen({ offers } : MainPageScreenProps): JSX.Element {
+function MainPageScreen(): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const currentCity = useAppSelector((state) => state.city);
+  const allOffers = useAppSelector((state) => state.offers);
+
+  const cityOffers = useMemo(
+    () => allOffers.filter((offer) => offer.city.name === currentCity),
+    [currentCity, allOffers]
+  );
+
   const [activeOffer, setActiveOffer] = useState<FullOffer | undefined>(undefined);
 
-  const offersCount = offers.length;
-  const city: City | undefined = offers[0]?.city;
+  const offersCount = cityOffers.length;
+  const city: City | undefined = cityOffers[0]?.city;
+
+  const handleCityChange = (newCity: string) => {
+    dispatch(changeCity(newCity));
+  };
 
   const handleCardHover = (offerId: string | null) => {
-    const currentOffer = offers.find((offer) => offer.id === offerId);
+    const currentOffer = cityOffers.find((offer) => offer.id === offerId);
     setActiveOffer(currentOffer);
   };
 
 
-  const points: Point[] = offers.map((offer) => ({
+  const points: Point[] = cityOffers.map((offer) => ({
     title: offer.title,
     lat: offer.location.latitude,
     lng: offer.location.longitude,
@@ -37,7 +51,7 @@ function MainPageScreen({ offers } : MainPageScreenProps): JSX.Element {
     }
     : undefined;
 
-  const cityName = offersCount > 0 ? offers[0].city.name : 'No offers';
+  const cityName = offersCount > 0 ? cityOffers[0].city.name : 'No offers';
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -69,38 +83,10 @@ function MainPageScreen({ offers } : MainPageScreenProps): JSX.Element {
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
-            <ul className="locations__list tabs__list">
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Paris</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Cologne</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Brussels</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item tabs__item--active">
-                  <span>Amsterdam</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Hamburg</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Dusseldorf</span>
-                </a>
-              </li>
-            </ul>
+            <CitiesList
+              activeCity={currentCity}
+              onCityChange={handleCityChange}
+            />
           </section>
         </div>
         <div className="cities">
@@ -125,7 +111,7 @@ function MainPageScreen({ offers } : MainPageScreenProps): JSX.Element {
               </form>
               <div className="cities__places-list places__list tabs__content">
                 <PlacesList
-                  offers={offers}
+                  offers={cityOffers}
                   variant={PlaceCardVariant.Cities}
                   onCardHover={handleCardHover}
                   activeOfferId={activeOffer?.id || null}

@@ -6,7 +6,7 @@ import {layerGroup, Marker} from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 type MapProps = {
-  city: City;
+  city: City | undefined;
   points: Points;
   selectedPoint: Point | undefined;
 };

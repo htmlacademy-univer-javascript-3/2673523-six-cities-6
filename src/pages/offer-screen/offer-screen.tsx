@@ -1,35 +1,46 @@
 import { useParams, Link } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { useAppSelector } from '../../hooks';
 import Logo from '../../components/logo/logo.tsx';
-import {FullOffer, FullOffers, Reviews} from '../../types/offer-info.ts';
 import NotFoundScreen from '../not-found-screen/not-found-screen.tsx';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import ReviewList from '../../components/review-list/review-list.tsx';
-import { maxNearbyOffers } from '../../const.ts';
 import Map from '../../components/map/map.tsx';
-import { Point } from '../../types/map-types.ts';
-import {PlaceCardVariant} from '../../types/place-card-types.ts';
 import PlacesList from '../../components/places-list/places-list.tsx';
-import {useState} from 'react';
+import { FullOffer } from '../../types/offer-info.ts';
+import { Point } from '../../types/map-types.ts';
+import { PlaceCardVariant } from '../../types/place-card-types.ts';
+import { maxNearbyOffers } from '../../const.ts';
 
-type OfferScreenProps = {
-  offers: FullOffers;
-  reviews: Reviews;
-};
+function OfferScreen(): JSX.Element {
+  const allOffers = useAppSelector((state) => state.offers);
+  const allReviews = useAppSelector((state) => state.reviews);
 
-function OfferScreen({ offers, reviews }: OfferScreenProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const [activeNearbyOffer, setActiveNearbyOffer] = useState<FullOffer | undefined>(undefined);
 
-  const currentOffer = offers.find((offer) => offer.id === id);
-  const currentReviews = reviews.filter((review) => review.offerId === id);
+  const currentOffer = useMemo(
+    () => allOffers.find((offer) => offer.id === id),
+    [allOffers, id]
+  );
+
+  const currentReviews = useMemo(
+    () => allReviews.filter((review) => review.offerId === id),
+    [allReviews, id]
+  );
+
+  const nearbyOffers = useMemo(() => {
+    if (!currentOffer) {
+      return [];
+    }
+    return allOffers
+      .filter((offer) => offer.city.name === currentOffer.city.name && offer.id !== currentOffer.id)
+      .slice(0, maxNearbyOffers);
+  }, [allOffers, currentOffer]);
 
   if (!currentOffer) {
     return <NotFoundScreen />;
   }
-
-  const nearbyOffers = offers
-    .filter((offer) => offer.city.name === currentOffer.city.name && offer.id !== currentOffer.id)
-    .slice(0, maxNearbyOffers);
 
   const handleNearbyCardHover = (offerId: string | null) => {
     const newActiveOffer = nearbyOffers.find((offer) => offer.id === offerId);
@@ -51,8 +62,7 @@ function OfferScreen({ offers, reviews }: OfferScreenProps): JSX.Element {
     lng: activeNearbyOffer?.location.longitude || currentOffer.location.longitude,
   };
 
-  const {images, isPremium, title, isFavorite, rating, type, bedrooms, maxAdults, price, goods, host, description,} = currentOffer;
-
+  const {images, isPremium, title, isFavorite, rating, type, bedrooms, maxAdults, price, goods, host, description} = currentOffer;
   const ratingWidth = `${Math.round(rating) * 20}%`;
 
   return (

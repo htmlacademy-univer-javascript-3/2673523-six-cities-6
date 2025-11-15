@@ -1,5 +1,6 @@
 import {Route, BrowserRouter, Routes} from 'react-router-dom';
-import { useMemo } from 'react';
+import {useEffect, useMemo} from 'react';
+import {useDispatch} from 'react-redux';
 
 import MainPageScreen from '../../pages/main-page-screen/main-page-screen';
 import LoginScreen from '../../pages/login-screen/login-screen.tsx';
@@ -14,25 +15,31 @@ import { hosts } from '../../mocks/hosts.ts';
 import { offers } from '../../mocks/offers.ts';
 import { FullOffers } from '../../types/offer-info.ts';
 import {AppRoute, AuthStatus} from '../../const.ts';
-
+import {loadOffers, loadReviews} from '../../store/actions.ts';
 
 function App() {
+  const dispatch = useDispatch();
+
   const FullOffersList: FullOffers = useMemo(() => offers.map((offer) => {
     const city = cities.find((c) => c.name === offer.cityName);
     const host = hosts.find((h) => h.id === offer.hostId);
     if (!city || !host) {
       throw new Error(`Data assembling error for offer id: ${offer.id}`);
     }
-
     return { ...offer, city, host };
   }), []);
+
+  useEffect(() => {
+    dispatch(loadOffers(FullOffersList));
+    dispatch(loadReviews(reviews));
+  }, [dispatch, FullOffersList]);
 
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path={AppRoute.Root}
-          element={<MainPageScreen offers={ FullOffersList } />}
+          element={<MainPageScreen />}
         />
         <Route
           path={AppRoute.Login}
@@ -42,15 +49,15 @@ function App() {
           path={AppRoute.Favourites}
           element={
             <PrivateRoute
-              authStatus={AuthStatus.NoAuth}
+              authStatus={AuthStatus.Auth}
             >
-              <FavouriteScreen offers={ FullOffersList }/>
+              <FavouriteScreen />
             </PrivateRoute>
           }
         />
         <Route
           path={AppRoute.Offers}
-          element={<OfferScreen offers={FullOffersList} reviews={reviews}/>}
+          element={<OfferScreen />}
         />
         <Route
           path="*"
