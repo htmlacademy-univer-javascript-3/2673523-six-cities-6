@@ -1,7 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {changeCity, loadOffers, loadReviews} from './actions.ts';
 import {FullOffers, Reviews} from '../types/offer-info';
-import {InitCity} from '../const.ts';
+import {INIT_CITY} from '../const.ts';
 
 interface AppState {
   city: string;
@@ -10,7 +10,7 @@ interface AppState {
 }
 
 const initialState: AppState = {
-  city: InitCity,
+  city: INIT_CITY,
   offers: [],
   reviews: []
 };

@@ -10,9 +10,9 @@ export const Setting = {
   reviews: reviews
 };
 
-export const minCommentLength = 50;
-export const maxCommentLength = 300;
-export const maxNearbyOffers = 3;
+export const MIN_COMMENT_LENGTH = 50;
+export const MAX_COMMENT_LENGTH = 300;
+export const MAX_NEARBY_OFFERS = 3;
 
 
 export enum AppRoute {
@@ -28,12 +28,12 @@ export enum AuthStatus {
   Unknown = 'UNKNOWN',
 }
 
-export const UrlMarkerCurrent =
+export const URL_MARKER_CURRENT =
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
 
-export const UrlMarkerDefault =
+export const URL_MARKER_DEFAULT =
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
 
-export const Cities = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
+export const CITIES = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
 
-export const InitCity = 'Paris';
+export const INIT_CITY = 'Paris';
