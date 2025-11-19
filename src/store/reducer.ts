@@ -1,18 +1,20 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {changeCity, loadOffers, loadReviews} from './actions.ts';
+import {changeCity, loadOffers, loadReviews, setSortType} from './actions.ts';
 import {FullOffers, Reviews} from '../types/offer-info';
-import {INIT_CITY} from '../const.ts';
+import {INIT_CITY, SortType} from '../const.ts';
 
 interface AppState {
   city: string;
   offers: FullOffers;
   reviews: Reviews;
+  sortType: SortType;
 }
 
 const initialState: AppState = {
   city: INIT_CITY,
   offers: [],
-  reviews: []
+  reviews: [],
+  sortType: SortType.Popular,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -25,6 +27,9 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(loadReviews, (state, action) => {
       state.reviews = action.payload;
+    })
+    .addCase(setSortType, (state, action) => { // Обрабатываем новое действие
+      state.sortType = action.payload;
     });
 });
 
