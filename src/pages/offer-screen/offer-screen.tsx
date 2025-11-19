@@ -10,7 +10,7 @@ import PlacesList from '../../components/places-list/places-list.tsx';
 import { FullOffer } from '../../types/offer-info.ts';
 import { Point } from '../../types/map-types.ts';
 import { PlaceCardVariant } from '../../types/place-card-types.ts';
-import { maxNearbyOffers } from '../../const.ts';
+import { MAX_NEARBY_OFFERS } from '../../const.ts';
 
 function OfferScreen(): JSX.Element {
   const allOffers = useAppSelector((state) => state.offers);
@@ -35,7 +35,7 @@ function OfferScreen(): JSX.Element {
     }
     return allOffers
       .filter((offer) => offer.city.name === currentOffer.city.name && offer.id !== currentOffer.id)
-      .slice(0, maxNearbyOffers);
+      .slice(0, MAX_NEARBY_OFFERS);
   }, [allOffers, currentOffer]);
 
   if (!currentOffer) {

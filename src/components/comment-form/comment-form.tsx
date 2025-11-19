@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent, Fragment } from 'react';
-import {minCommentLength, maxCommentLength} from '../../const.ts';
+import {MIN_COMMENT_LENGTH, MAX_COMMENT_LENGTH} from '../../const.ts';
 import {ReactNode} from 'react';
 
 const starRatings = [
@@ -28,7 +28,7 @@ function CommentForm(): ReactNode {
     setComment('');
   };
 
-  const isFormValid = rating !== 0 && comment.length >= minCommentLength && comment.length <= maxCommentLength;
+  const isFormValid = rating !== 0 && comment.length >= MIN_COMMENT_LENGTH && comment.length <= MAX_COMMENT_LENGTH;
 
   return (
     <form
@@ -69,13 +69,13 @@ function CommentForm(): ReactNode {
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={comment}
         onChange={handleCommentChange}
-        maxLength={maxCommentLength}
+        maxLength={MAX_COMMENT_LENGTH}
       >
       </textarea>
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set a <span className="reviews__star">rating</span> and
-          describe your stay with at least <b className="reviews__text-amount">{minCommentLength} characters</b>.
+          describe your stay with at least <b className="reviews__text-amount">{MIN_COMMENT_LENGTH} characters</b>.
         </p>
         <button
           className="reviews__submit form__submit button"

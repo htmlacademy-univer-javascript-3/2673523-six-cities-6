@@ -1,4 +1,4 @@
-import {City} from '../../types/offer-info.ts';
+import {type City} from '../../types/offer-info.ts';
 import {currentCustomIcon, defaultCustomIcon, Point, Points} from '../../types/map-types.ts';
 import {useEffect, useRef} from 'react';
 import useMap from '../../hooks/use-map.tsx';
