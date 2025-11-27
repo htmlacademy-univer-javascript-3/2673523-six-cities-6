@@ -11,3 +11,7 @@ export const loadReviews = createAction<Reviews>('app/loadReviews');
 export const setSortType = createAction<SortType>('app/setSortType');
 
 export const requireAuthorization = createAction<AuthStatus>('user/requireAuthorization');
+
+export const setOffersDataLoadingStatus = createAction<boolean>('data/setOffersDataLoadingStatus');
+
+export const setError = createAction<string | null>('app/setError');

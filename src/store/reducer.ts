@@ -1,5 +1,12 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {changeCity, loadOffers, loadReviews, requireAuthorization, setSortType} from './actions.ts';
+import {
+  changeCity,
+  loadOffers,
+  loadReviews,
+  requireAuthorization, setError,
+  setOffersDataLoadingStatus,
+  setSortType
+} from './actions.ts';
 import {Reviews, ShortOffers} from '../types/offer-info';
 import {AuthStatus, INIT_CITY, SortType} from '../const.ts';
 
@@ -9,6 +16,8 @@ interface AppState {
   reviews: Reviews;
   sortType: SortType;
   authStatus: AuthStatus;
+  isOffersDataLoading: boolean;
+  error: string | null;
 }
 
 const initialState: AppState = {
@@ -17,6 +26,8 @@ const initialState: AppState = {
   reviews: [],
   sortType: SortType.Popular,
   authStatus: AuthStatus.Unknown,
+  isOffersDataLoading: false,
+  error: null,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -35,6 +46,12 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(requireAuthorization, (state, action) => {
       state.authStatus = action.payload;
+    })
+    .addCase(setOffersDataLoadingStatus, (state, action) => {
+      state.isOffersDataLoading = action.payload;
+    })
+    .addCase(setError, (state, action) => {
+      state.error = action.payload;
     });
 });
 

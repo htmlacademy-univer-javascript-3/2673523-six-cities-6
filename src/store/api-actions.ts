@@ -2,11 +2,22 @@ import {AxiosInstance} from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AppDispatch, State} from '../types/state.js';
 import {ShortOffers} from '../types/offer-info.ts';
-import { loadOffers, requireAuthorization} from './actions.ts';
+import {loadOffers, requireAuthorization, setError, setOffersDataLoadingStatus} from './actions.ts';
 import {saveToken, dropToken} from '../service/token';
-import {ApiRoute, AuthStatus} from '../const';
+import {ApiRoute, AuthStatus, TIMEOUT_SHOW_ERROR} from '../const';
 import {AuthData} from '../types/auth-data';
 import {UserData} from '../types/user-data';
+import {store} from './index.ts';
+
+export const clearErrorAction = createAsyncThunk(
+  'app/clearError',
+  () => {
+    setTimeout(
+      () => store.dispatch(setError(null)),
+      TIMEOUT_SHOW_ERROR,
+    );
+  },
+);
 
 export const fetchOffersAction = createAsyncThunk<void, undefined, {
   dispatch: AppDispatch;
@@ -15,7 +26,9 @@ export const fetchOffersAction = createAsyncThunk<void, undefined, {
 }>(
   'data/getOffers',
   async (_arg, {dispatch, extra: api}) => {
+    dispatch(setOffersDataLoadingStatus(true));
     const {data} = await api.get<ShortOffers>(ApiRoute.GetOffers);
+    dispatch(setOffersDataLoadingStatus(false));
     dispatch(loadOffers(data));
   },
 );

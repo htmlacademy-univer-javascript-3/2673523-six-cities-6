@@ -12,13 +12,23 @@ import PrivateRoute from '../private-route/private-route.tsx';
 import { reviews } from '../../mocks/review.ts';
 import {AppRoute, AuthStatus} from '../../const.ts';
 import {loadReviews} from '../../store/actions.ts';
+import {useAppSelector} from '../../hooks';
+import LoadingPage from '../../pages/loading-page/loading-page.tsx';
 
 function App() {
   const dispatch = useDispatch();
+  const authStatus = useAppSelector((state) => state.authStatus);
+  const isOffersDataLoading = useAppSelector((state) => state.isOffersDataLoading);
 
   useEffect(() => {
     dispatch(loadReviews(reviews));
   }, [dispatch]);
+
+  if (authStatus === AuthStatus.Unknown || isOffersDataLoading) {
+    return (
+      <LoadingPage />
+    );
+  }
 
   return (
     <BrowserRouter>
@@ -35,7 +45,7 @@ function App() {
           path={AppRoute.Favourites}
           element={
             <PrivateRoute
-              authStatus={AuthStatus.Auth}
+              authStatus={authStatus}
             >
               <FavouriteScreen />
             </PrivateRoute>
