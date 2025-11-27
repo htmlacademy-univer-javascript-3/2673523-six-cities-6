@@ -20,6 +20,7 @@ function FavouriteScreen(): JSX.Element {
       if (!acc[city]) {
         acc[city] = [];
       }
+      //Аналогично пока закомментировано для Github Actions, т.к. связанное с этим в следующем задании
       //acc[city].push(offer);
       return acc;
     }, {}),
