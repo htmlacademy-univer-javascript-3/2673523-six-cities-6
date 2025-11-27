@@ -1,13 +1,14 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {changeCity, loadOffers, loadReviews, setSortType} from './actions.ts';
-import {FullOffers, Reviews} from '../types/offer-info';
-import {INIT_CITY, SortType} from '../const.ts';
+import {changeCity, loadOffers, loadReviews, requireAuthorization, setSortType} from './actions.ts';
+import {Reviews, ShortOffers} from '../types/offer-info';
+import {AuthStatus, INIT_CITY, SortType} from '../const.ts';
 
 interface AppState {
   city: string;
-  offers: FullOffers;
+  offers: ShortOffers;
   reviews: Reviews;
   sortType: SortType;
+  authStatus: AuthStatus;
 }
 
 const initialState: AppState = {
@@ -15,6 +16,7 @@ const initialState: AppState = {
   offers: [],
   reviews: [],
   sortType: SortType.Popular,
+  authStatus: AuthStatus.Unknown,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -30,6 +32,9 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setSortType, (state, action) => { // Обрабатываем новое действие
       state.sortType = action.payload;
+    })
+    .addCase(requireAuthorization, (state, action) => {
+      state.authStatus = action.payload;
     });
 });
 

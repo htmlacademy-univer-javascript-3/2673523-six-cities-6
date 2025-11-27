@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { FullOffer } from '../../types/offer-info.ts';
+import {ShortOffer} from '../../types/offer-info.ts';
 import {PlaceCardConfigs, PlaceCardVariant} from '../../types/place-card-types.ts';
 
 type PlaceCardProps = {
-  offer: FullOffer;
+  offer: ShortOffer;
   variant: PlaceCardVariant;
   onMouseEnter?: (id: string) => void;
   onMouseLeave?: () => void;

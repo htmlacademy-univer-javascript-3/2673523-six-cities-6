@@ -35,6 +35,12 @@ export enum SortType {
   TopRatedFirst = 'Top rated first',
 }
 
+export enum ApiRoute {
+  GetOffers = '/offers',
+  Login = '/login',
+  Logout = '/logout'
+}
+
 export const URL_MARKER_CURRENT =
   '/img/pin-active.svg';
 
@@ -47,4 +53,4 @@ export const INIT_CITY = 'Paris';
 
 export const BACKEND_URL = 'https://14.design.htmlacademy.pro/six-cities';
 export const REQUEST_TIMEOUT = 5000;
-export const AUTH_TOKEN_KEY_NAME = 'auth-token';
+export const AUTH_TOKEN_KEY_NAME = 'six-cities-token';

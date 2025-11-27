@@ -25,6 +25,19 @@ export type Review = {
   rating: number;
 };
 
+export type ShortOffer = {
+  id: string;
+  title: string;
+  type: string;
+  price: number;
+  city: City;
+  location: Location;
+  isFavorite: boolean;
+  isPremium: boolean;
+  rating: number;
+  previewImage: string;
+}
+
 export type Offer = {
   id: string;
   title: string;
@@ -50,6 +63,8 @@ export type FullOffer = Omit<Offer, 'cityName' | 'hostId'> & {
 };
 
 export type Offers = Offer[]
+
+export type ShortOffers = ShortOffer[]
 
 export type FullOffers = FullOffer[]
 

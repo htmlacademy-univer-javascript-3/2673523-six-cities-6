@@ -1,9 +1,9 @@
 import PlaceCard from '../place-card/place-card.tsx';
-import { FullOffers } from '../../types/offer-info.ts';
+import {ShortOffers} from '../../types/offer-info.ts';
 import {PlaceCardVariant} from '../../types/place-card-types.ts';
 
 type PlacesListProps = {
-  offers: FullOffers;
+  offers: ShortOffers;
   variant: PlaceCardVariant;
   onCardHover: (offerId: string | null) => void;
   activeOfferId: string | null;

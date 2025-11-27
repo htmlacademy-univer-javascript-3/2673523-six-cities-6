@@ -3,7 +3,7 @@ import Logo from '../../components/logo/logo.tsx';
 import PlacesList from '../../components/places-list/places-list.tsx';
 import CitiesList from '../../components/cities-list/cities-list.tsx';
 import Map from '../../components/map/map.tsx';
-import {City, FullOffer } from '../../types/offer-info.ts';
+import {City, ShortOffer} from '../../types/offer-info.ts';
 import {Point} from '../../types/map-types.ts';
 import {PlaceCardVariant} from '../../types/place-card-types.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
@@ -37,7 +37,7 @@ function MainPageScreen(): JSX.Element {
     }
   }, [activeSortType, cityOffers]);
 
-  const [activeOffer, setActiveOffer] = useState<FullOffer | undefined>(undefined);
+  const [activeOffer, setActiveOffer] = useState<ShortOffer | undefined>(undefined);
 
   const offersCount = sortedOffers.length;
   const city: City | undefined = cityOffers[0]?.city;
