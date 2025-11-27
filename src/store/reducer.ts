@@ -5,10 +5,11 @@ import {
   loadReviews,
   requireAuthorization, setError,
   setOffersDataLoadingStatus,
-  setSortType
+  setSortType, setUser
 } from './actions.ts';
 import {Reviews, ShortOffers} from '../types/offer-info';
 import {AuthStatus, INIT_CITY, SortType} from '../const.ts';
+import {UserData} from '../types/user-data.ts';
 
 interface AppState {
   city: string;
@@ -18,6 +19,7 @@ interface AppState {
   authStatus: AuthStatus;
   isOffersDataLoading: boolean;
   error: string | null;
+  user: UserData | null;
 }
 
 const initialState: AppState = {
@@ -28,6 +30,7 @@ const initialState: AppState = {
   authStatus: AuthStatus.Unknown,
   isOffersDataLoading: false,
   error: null,
+  user: null
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -52,6 +55,9 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setError, (state, action) => {
       state.error = action.payload;
+    })
+    .addCase(setUser, (state, action) => {
+      state.user = action.payload;
     });
 });
 

@@ -2,9 +2,16 @@ import {AxiosInstance} from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AppDispatch, State} from '../types/state.js';
 import {ShortOffers} from '../types/offer-info.ts';
-import {loadOffers, requireAuthorization, setError, setOffersDataLoadingStatus} from './actions.ts';
+import {
+  loadOffers,
+  redirectToRoute,
+  requireAuthorization,
+  setError,
+  setOffersDataLoadingStatus,
+  setUser
+} from './actions.ts';
 import {saveToken, dropToken} from '../service/token';
-import {ApiRoute, AuthStatus, TIMEOUT_SHOW_ERROR} from '../const';
+import {ApiRoute, AppRoute, AuthStatus, TIMEOUT_SHOW_ERROR} from '../const';
 import {AuthData} from '../types/auth-data';
 import {UserData} from '../types/user-data';
 import {store} from './index.ts';
@@ -41,10 +48,12 @@ export const checkAuthAction = createAsyncThunk<void, undefined, {
   'user/checkAuth',
   async (_arg, {dispatch, extra: api}) => {
     try {
-      await api.get(ApiRoute.Login);
+      const {data} = await api.get<UserData>(ApiRoute.Login);
       dispatch(requireAuthorization(AuthStatus.Auth));
+      dispatch(setUser(data));
     } catch {
       dispatch(requireAuthorization(AuthStatus.NoAuth));
+      dispatch(setUser(null));
     }
   },
 );
@@ -56,9 +65,14 @@ export const loginAction = createAsyncThunk<void, AuthData, {
 }>(
   'user/login',
   async ({login: email, password}, {dispatch, extra: api}) => {
-    const {data: {token}} = await api.post<UserData>(ApiRoute.Login, {email, password});
-    saveToken(token);
+    // 1. Делаем запрос
+    const {data} = await api.post<UserData>(ApiRoute.Login, {email, password});
+
+    saveToken(data.token);
     dispatch(requireAuthorization(AuthStatus.Auth));
+    dispatch(setUser(data)); // Сохраняем юзера
+
+    dispatch(redirectToRoute(AppRoute.Root));
   },
 );
 
@@ -72,5 +86,6 @@ export const logoutAction = createAsyncThunk<void, undefined, {
     await api.delete(ApiRoute.Logout);
     dropToken();
     dispatch(requireAuthorization(AuthStatus.NoAuth));
+    dispatch(setUser(null));
   },
 );
