@@ -20,7 +20,7 @@ function FavouriteScreen(): JSX.Element {
       if (!acc[city]) {
         acc[city] = [];
       }
-      acc[city].push(offer);
+      //acc[city].push(offer);
       return acc;
     }, {}),
     [favoriteOffers]
