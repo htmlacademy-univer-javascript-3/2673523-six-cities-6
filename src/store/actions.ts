@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {Reviews, ShortOffers} from '../types/offer-info.ts';
+import {FullOffer, Reviews, ShortOffers} from '../types/offer-info.ts';
 import {AppRoute, AuthStatus, SortType} from '../const.ts';
 import {UserData} from '../types/user-data.ts';
 
@@ -21,3 +21,12 @@ export const setUser = createAction<UserData | null>('user/setUser');
 
 export const redirectToRoute = createAction<AppRoute>('app/redirectToRoute');
 
+export const loadOffer = createAction<FullOffer>('data/loadOffer');
+
+export const loadNearbyOffers = createAction<ShortOffers>('data/loadNearbyOffers');
+
+export const loadFavorites = createAction<ShortOffers>('data/loadFavorites');
+
+export const setOfferDataLoadingStatus = createAction<boolean>('data/setOfferLoadingStatus');
+
+export const setCommentPostingStatus = createAction<boolean>('data/setCommentStatus');

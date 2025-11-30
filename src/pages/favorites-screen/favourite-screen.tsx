@@ -1,82 +1,71 @@
-import { useMemo } from 'react';
+import {useEffect, useMemo} from 'react';
 import { Link } from 'react-router-dom';
-import { useAppSelector } from '../../hooks';
-import Logo from '../../components/logo/logo.tsx';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 import FavoriteCard from '../../components/favourite-card/favourite-card.tsx';
-import { FullOffer } from '../../types/offer-info.ts';
+import Header from '../../components/header/header.tsx';
+import {ShortOffer} from '../../types/offer-info.ts';
 import { AppRoute } from '../../const.ts';
+import {fetchFavoritesAction} from '../../store/api-actions.ts';
 
 function FavouriteScreen(): JSX.Element {
-  const allOffers = useAppSelector((state) => state.offers);
+  const dispatch = useAppDispatch();
+  const favoriteOffers = useAppSelector((state) => state.favorites);
 
-  const favoriteOffers = useMemo(
-    () => allOffers.filter((offer) => offer.isFavorite),
-    [allOffers]
-  );
+  useEffect(() => {
+    dispatch(fetchFavoritesAction());
+  }, [dispatch]);
 
   const favoritesByCity = useMemo(
-    () => favoriteOffers.reduce<Record<string, FullOffer[]>>((acc, offer) => {
+    () => favoriteOffers.reduce<Record<string, ShortOffer[]>>((acc, offer) => {
       const city = offer.city.name;
       if (!acc[city]) {
         acc[city] = [];
       }
-      //Аналогично пока закомментировано для Github Actions, т.к. связанное с этим в следующем задании
-      //acc[city].push(offer);
+      acc[city].push(offer);
       return acc;
     }, {}),
     [favoriteOffers]
   );
 
-  return (
-    <div className="page">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <Logo />
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <Link className="header__nav-link header__nav-link--profile" to={AppRoute.Favourites}>
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">{favoriteOffers.length}</span>
-                  </Link>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+  const isEmpty = favoriteOffers.length === 0;
 
-      <main className="page__main page__main--favorites">
+  return (
+    <div className={`page ${isEmpty ? 'page--favorites-empty' : ''}`}>
+      <Header />
+
+      <main className={`page__main page__main--favorites ${isEmpty ? 'page__main--favorites-empty' : ''}`}>
         <div className="page__favorites-container container">
-          <section className="favorites">
-            <h1 className="favorites__title">Saved listing</h1>
-            <ul className="favorites__list">
-              {Object.entries(favoritesByCity).map(([city, offersInCity]) => (
-                <li className="favorites__locations-items" key={city}>
-                  <div className="favorites__locations locations locations--current">
-                    <div className="locations__item">
-                      <a className="locations__item-link" href="#">
-                        <span>{city}</span>
-                      </a>
+          {isEmpty ? (
+            <section className="favorites favorites--empty">
+              <h1 className="visually-hidden">Favorites (empty)</h1>
+              <div className="favorites__status-wrapper">
+                <b className="favorites__status">Nothing yet saved.</b>
+                <p className="favorites__status-description">Save properties to narrow down search or plan your future trips.</p>
+              </div>
+            </section>
+          ) : (
+            <section className="favorites">
+              <h1 className="favorites__title">Saved listing</h1>
+              <ul className="favorites__list">
+                {Object.entries(favoritesByCity).map(([city, offersInCity]) => (
+                  <li className="favorites__locations-items" key={city}>
+                    <div className="favorites__locations locations locations--current">
+                      <div className="locations__item">
+                        <Link className="locations__item-link" to={AppRoute.Root}>
+                          <span>{city}</span>
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                  <div className="favorites__places">
-                    {offersInCity.map((offer) => (
-                      <FavoriteCard key={offer.id} offer={offer} />
-                    ))}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
+                    <div className="favorites__places">
+                      {offersInCity.map((offer) => (
+                        <FavoriteCard key={offer.id} offer={offer} />
+                      ))}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
       </main>
       <footer className="footer container">

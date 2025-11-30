@@ -16,6 +16,12 @@ export type Host = {
   isPro: boolean;
 };
 
+export type CommentData = {
+  offerId: string;
+  comment: string;
+  rating: number;
+};
+
 export type Review = {
   id: string;
   offerId: string;
@@ -23,6 +29,11 @@ export type Review = {
   user: Host;
   comment: string;
   rating: number;
+};
+
+export type FavoriteStatusData = {
+  offerId: string;
+  status: number;
 };
 
 export type ShortOffer = {

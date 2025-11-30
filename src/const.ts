@@ -20,6 +20,7 @@ export enum AppRoute {
   Login = '/login',
   Favourites = '/favourites',
   Offers = '/offers/:id',
+  NotFound = '/notFoundError',
 }
 
 export enum AuthStatus {
@@ -35,11 +36,16 @@ export enum SortType {
   TopRatedFirst = 'Top rated first',
 }
 
-export enum ApiRoute {
-  GetOffers = '/offers',
-  Login = '/login',
-  Logout = '/logout'
-}
+export const ApiRoute = {
+  GetOffers: '/offers',
+  Login: '/login',
+  Logout: '/logout',
+  Favourites: '/favorite',
+  GetOffer: (offersId : string) => `/offers/${offersId}`,
+  GetNearbyOffers: (offerId : string) => `/offers/${offerId}/nearby`,
+  GetOfferComments: (offerId : string) => `comments/${offerId}`,
+  ChangeFavouriteStatus: (offerId : string, status: number) => `/favourites/${offerId}/${status}`,
+};
 
 export const URL_MARKER_CURRENT =
   '/img/pin-active.svg';
