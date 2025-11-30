@@ -47,12 +47,14 @@ function OfferScreen(): JSX.Element {
 
   const offersForMap = [...nearbyOffersSlice, fullOffer];
   const points: Point[] = offersForMap.map((offer) => ({
+    id: offer.id,
     title: offer.title,
     lat: offer.location.latitude,
     lng: offer.location.longitude,
   }));
 
   const selectedPoint: Point = {
+    id: activeNearbyOffer?.id || fullOffer.id,
     title: activeNearbyOffer?.title || fullOffer.title,
     lat: activeNearbyOffer?.location.latitude || fullOffer.location.latitude,
     lng: activeNearbyOffer?.location.longitude || fullOffer.location.longitude,

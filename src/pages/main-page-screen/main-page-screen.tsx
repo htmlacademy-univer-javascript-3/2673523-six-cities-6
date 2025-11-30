@@ -57,14 +57,15 @@ function MainPageScreen(): JSX.Element {
 
 
   const points: Point[] = cityOffers.map((offer) => ({
+    id: offer.id,
     title: offer.title,
     lat: offer.location.latitude,
     lng: offer.location.longitude,
   }));
 
-
   const selectedPoint: Point | undefined = activeOffer
     ? {
+      id: activeOffer.id,
       title: activeOffer.title,
       lat: activeOffer.location.latitude,
       lng: activeOffer.location.longitude,
