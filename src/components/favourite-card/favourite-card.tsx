@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { FullOffer } from '../../types/offer-info';
+import {ShortOffer} from '../../types/offer-info';
 
 type FavoriteCardProps = {
-  offer: FullOffer;
+  offer: ShortOffer;
 };
 
 function FavoriteCard({ offer }: FavoriteCardProps): JSX.Element {

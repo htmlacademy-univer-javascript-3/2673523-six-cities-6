@@ -1,16 +1,27 @@
 import {Navigate} from 'react-router-dom';
-import {AppRoute, AuthStatus} from '../../const.ts';
+import {AppRoute, AuthStatus} from '../../const';
+import {useAppSelector} from '../../hooks';
 import {ReactNode} from 'react';
+import LoadingPage from '../../pages/loading-page/loading-page';
 
 type PrivateRouteProps = {
-  authStatus: AuthStatus;
   children: ReactNode;
 }
 
 function PrivateRoute(props: PrivateRouteProps): ReactNode {
-  const {authStatus, children} = props;
+  const {children} = props;
 
-  return (authStatus === AuthStatus.Auth) ? children : <Navigate to={AppRoute.Login}/>;
+  const authStatus = useAppSelector((state) => state.authStatus);
+
+  if (authStatus === AuthStatus.Unknown) {
+    return <LoadingPage />;
+  }
+
+  return (
+    authStatus === AuthStatus.Auth
+      ? children
+      : <Navigate to={AppRoute.Login} />
+  );
 }
 
 export default PrivateRoute;

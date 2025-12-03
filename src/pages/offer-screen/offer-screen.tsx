@@ -1,95 +1,71 @@
-import { useParams, Link } from 'react-router-dom';
-import { useMemo, useState } from 'react';
-import { useAppSelector } from '../../hooks';
-import Logo from '../../components/logo/logo.tsx';
-import NotFoundScreen from '../not-found-screen/not-found-screen.tsx';
+import { useParams } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import Header from '../../components/header/header.tsx';
 import CommentForm from '../../components/comment-form/comment-form.tsx';
 import ReviewList from '../../components/review-list/review-list.tsx';
 import Map from '../../components/map/map.tsx';
 import PlacesList from '../../components/places-list/places-list.tsx';
-import { FullOffer } from '../../types/offer-info.ts';
+import LoadingPage from '../loading-page/loading-page.tsx';
+import { ShortOffer } from '../../types/offer-info.ts';
 import { Point } from '../../types/map-types.ts';
 import { PlaceCardVariant } from '../../types/place-card-types.ts';
-import { MAX_NEARBY_OFFERS } from '../../const.ts';
+import {AuthStatus, MAX_NEARBY_OFFERS} from '../../const.ts';
+import {fetchOfferAction} from '../../store/api-actions.ts';
 
 function OfferScreen(): JSX.Element {
-  const allOffers = useAppSelector((state) => state.offers);
-  const allReviews = useAppSelector((state) => state.reviews);
-
   const { id } = useParams<{ id: string }>();
-  const [activeNearbyOffer, setActiveNearbyOffer] = useState<FullOffer | undefined>(undefined);
+  const dispatch = useAppDispatch();
 
-  const currentOffer = useMemo(
-    () => allOffers.find((offer) => offer.id === id),
-    [allOffers, id]
-  );
+  const fullOffer = useAppSelector((state) => state.offer);
+  const nearbyOffers = useAppSelector((state) => state.nearbyOffers);
+  const reviews = useAppSelector((state) => state.reviews);
+  const isOfferLoading = useAppSelector((state) => state.isOfferDataLoading);
+  const authStatus = useAppSelector((state) => state.authStatus);
 
-  const currentReviews = useMemo(
-    () => allReviews.filter((review) => review.offerId === id),
-    [allReviews, id]
-  );
-
-  const nearbyOffers = useMemo(() => {
-    if (!currentOffer) {
-      return [];
+  const [activeNearbyOffer, setActiveNearbyOffer] = useState<ShortOffer | undefined>(undefined);
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchOfferAction(id));
     }
-    return allOffers
-      .filter((offer) => offer.city.name === currentOffer.city.name && offer.id !== currentOffer.id)
-      .slice(0, MAX_NEARBY_OFFERS);
-  }, [allOffers, currentOffer]);
+  }, [id, dispatch]);
 
-  if (!currentOffer) {
-    return <NotFoundScreen />;
+  if (isOfferLoading || !fullOffer) {
+    return <LoadingPage />;
   }
 
+  const nearbyOffersSlice = nearbyOffers.slice(0, MAX_NEARBY_OFFERS);
+
+  const sortedReviews = [...reviews]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 10);
+
   const handleNearbyCardHover = (offerId: string | null) => {
-    const newActiveOffer = nearbyOffers.find((offer) => offer.id === offerId);
+    const newActiveOffer = nearbyOffersSlice.find((offer) => offer.id === offerId);
     setActiveNearbyOffer(newActiveOffer);
   };
 
-  const offersForMap = [...nearbyOffers, currentOffer];
-  const city = currentOffer.city;
-
+  const offersForMap = [...nearbyOffersSlice, fullOffer];
   const points: Point[] = offersForMap.map((offer) => ({
+    id: offer.id,
     title: offer.title,
     lat: offer.location.latitude,
     lng: offer.location.longitude,
   }));
 
   const selectedPoint: Point = {
-    title: activeNearbyOffer?.title || currentOffer.title,
-    lat: activeNearbyOffer?.location.latitude || currentOffer.location.latitude,
-    lng: activeNearbyOffer?.location.longitude || currentOffer.location.longitude,
+    id: activeNearbyOffer?.id || fullOffer.id,
+    title: activeNearbyOffer?.title || fullOffer.title,
+    lat: activeNearbyOffer?.location.latitude || fullOffer.location.latitude,
+    lng: activeNearbyOffer?.location.longitude || fullOffer.location.longitude,
   };
 
-  const {images, isPremium, title, isFavorite, rating, type, bedrooms, maxAdults, price, goods, host, description} = currentOffer;
+  const { images, isPremium, title, isFavorite, rating, type, bedrooms, maxAdults, price, goods, host, description } = fullOffer;
   const ratingWidth = `${Math.round(rating) * 20}%`;
 
   return (
     <div className="page">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <Logo />
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <Link className="header__nav-link header__nav-link--profile" to="/favorites">
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
-                  </Link>
-                </li>
-                <li className="header__nav-item">
-                  <Link className="header__nav-link" to="/login">
-                    <span className="header__signout">Sign out</span>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="page__main page__main--offer">
         <section className="offer">
@@ -149,7 +125,7 @@ function OfferScreen(): JSX.Element {
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
                   <div className={`offer__avatar-wrapper user__avatar-wrapper ${host.isPro ? 'offer__avatar-wrapper--pro' : ''}`}>
-                    <img className="offer__avatar user__avatar" src={`/${host.avatarUrl}`} width="74" height="74" alt="Host avatar" />
+                    <img className="offer__avatar user__avatar" src={host.avatarUrl} width="74" height="74" alt="Host avatar" />
                   </div>
                   <span className="offer__user-name">{host.name}</span>
                   {host.isPro && <span className="offer__user-status">Pro</span>}
@@ -159,13 +135,13 @@ function OfferScreen(): JSX.Element {
                 </div>
               </div>
               <section className="offer__reviews reviews">
-                <ReviewList reviews={currentReviews} />
-                <CommentForm />
+                <ReviewList reviews={sortedReviews} />
+                {authStatus === AuthStatus.Auth && <CommentForm offerId={fullOffer.id} />}
               </section >
             </div>
             <section className="offer__map map">
               <Map
-                city={city}
+                city={fullOffer.city}
                 points={points}
                 selectedPoint={selectedPoint}
               />
@@ -177,7 +153,7 @@ function OfferScreen(): JSX.Element {
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <div className="near-places__list places__list">
               <PlacesList
-                offers={nearbyOffers}
+                offers={nearbyOffersSlice}
                 variant={PlaceCardVariant.NearPlaces}
                 onCardHover={handleNearbyCardHover}
                 activeOfferId={activeNearbyOffer?.id || null}

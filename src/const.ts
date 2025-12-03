@@ -20,6 +20,7 @@ export enum AppRoute {
   Login = '/login',
   Favourites = '/favourites',
   Offers = '/offers/:id',
+  NotFound = '/notFoundError',
 }
 
 export enum AuthStatus {
@@ -35,6 +36,17 @@ export enum SortType {
   TopRatedFirst = 'Top rated first',
 }
 
+export const ApiRoute = {
+  GetOffers: '/offers',
+  Login: '/login',
+  Logout: '/logout',
+  Favourites: '/favorite',
+  GetOffer: (offersId : string) => `/offers/${offersId}`,
+  GetNearbyOffers: (offerId : string) => `/offers/${offerId}/nearby`,
+  GetOfferComments: (offerId : string) => `comments/${offerId}`,
+  ChangeFavouriteStatus: (offerId : string, status: number) => `/favourites/${offerId}/${status}`,
+};
+
 export const URL_MARKER_CURRENT =
   '/img/pin-active.svg';
 
@@ -44,3 +56,8 @@ export const URL_MARKER_DEFAULT =
 export const CITIES = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
 
 export const INIT_CITY = 'Paris';
+
+export const BACKEND_URL = 'https://14.design.htmlacademy.pro/six-cities';
+export const REQUEST_TIMEOUT = 5000;
+export const AUTH_TOKEN_KEY_NAME = 'six-cities-token';
+export const TIMEOUT_SHOW_ERROR = 2000;

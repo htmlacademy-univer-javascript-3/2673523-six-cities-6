@@ -16,6 +16,12 @@ export type Host = {
   isPro: boolean;
 };
 
+export type CommentData = {
+  offerId: string;
+  comment: string;
+  rating: number;
+};
+
 export type Review = {
   id: string;
   offerId: string;
@@ -24,6 +30,24 @@ export type Review = {
   comment: string;
   rating: number;
 };
+
+export type FavoriteStatusData = {
+  offerId: string;
+  status: number;
+};
+
+export type ShortOffer = {
+  id: string;
+  title: string;
+  type: string;
+  price: number;
+  city: City;
+  location: Location;
+  isFavorite: boolean;
+  isPremium: boolean;
+  rating: number;
+  previewImage: string;
+}
 
 export type Offer = {
   id: string;
@@ -50,6 +74,8 @@ export type FullOffer = Omit<Offer, 'cityName' | 'hostId'> & {
 };
 
 export type Offers = Offer[]
+
+export type ShortOffers = ShortOffer[]
 
 export type FullOffers = FullOffer[]
 

@@ -1,6 +1,11 @@
 import { useState, ChangeEvent, FormEvent, Fragment } from 'react';
 import {MIN_COMMENT_LENGTH, MAX_COMMENT_LENGTH} from '../../const.ts';
-import {ReactNode} from 'react';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {postCommentAction} from '../../store/api-actions.ts';
+
+type CommentFormProps = {
+  offerId: string;
+};
 
 const starRatings = [
   { value: 5, title: 'perfect' },
@@ -10,7 +15,10 @@ const starRatings = [
   { value: 1, title: 'terribly' },
 ];
 
-function CommentForm(): ReactNode {
+function CommentForm({ offerId }: CommentFormProps): JSX.Element {
+  const dispatch = useAppDispatch();
+  const isSubmitting = useAppSelector((state) => state.isCommentPosting);
+
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
 
@@ -24,8 +32,19 @@ function CommentForm(): ReactNode {
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    setRating(0);
-    setComment('');
+
+    if (rating === 0 || comment.length < MIN_COMMENT_LENGTH || comment.length > MAX_COMMENT_LENGTH) {
+      return;
+    }
+
+    dispatch(postCommentAction({ offerId, comment, rating }))
+      .unwrap()
+      .then(() => {
+        setRating(0);
+        setComment('');
+      })
+      .catch(() => {
+      });
   };
 
   const isFormValid = rating !== 0 && comment.length >= MIN_COMMENT_LENGTH && comment.length <= MAX_COMMENT_LENGTH;
@@ -49,6 +68,7 @@ function CommentForm(): ReactNode {
               type="radio"
               checked={rating === value}
               onChange={handleRatingChange}
+              disabled={isSubmitting}
             />
             <label
               htmlFor={`${value}-stars`}
@@ -70,6 +90,7 @@ function CommentForm(): ReactNode {
         value={comment}
         onChange={handleCommentChange}
         maxLength={MAX_COMMENT_LENGTH}
+        disabled={isSubmitting}
       >
       </textarea>
       <div className="reviews__button-wrapper">
@@ -80,9 +101,9 @@ function CommentForm(): ReactNode {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={!isFormValid}
+          disabled={!isFormValid || isSubmitting}
         >
-          Submit
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
       </div>
     </form>
