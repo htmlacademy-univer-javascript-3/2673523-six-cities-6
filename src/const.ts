@@ -44,7 +44,7 @@ export const ApiRoute = {
   GetOffer: (offersId : string) => `/offers/${offersId}`,
   GetNearbyOffers: (offerId : string) => `/offers/${offerId}/nearby`,
   GetOfferComments: (offerId : string) => `comments/${offerId}`,
-  ChangeFavouriteStatus: (offerId : string, status: number) => `/favourites/${offerId}/${status}`,
+  ChangeFavouriteStatus: (offerId : string, status: number) => `/favorite/${offerId}/${status}`,
 };
 
 export const URL_MARKER_CURRENT =

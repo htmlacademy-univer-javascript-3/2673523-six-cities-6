@@ -1,7 +1,7 @@
 import {AxiosInstance} from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AppDispatch, State} from '../types/state.js';
-import {CommentData, FullOffer, Reviews, ShortOffers} from '../types/offer-info.ts';
+import {CommentData, FavoriteStatusData, FullOffer, Reviews, ShortOffers} from '../types/offer-info.ts';
 import {saveToken, dropToken} from '../service/token';
 import {ApiRoute, AppRoute, TIMEOUT_SHOW_ERROR} from '../const';
 import {AuthData} from '../types/auth-data';
@@ -116,3 +116,14 @@ export const fetchFavoritesAction = createAsyncThunk<ShortOffers, undefined, {
   },
 );
 
+export const changeFavoriteStatusAction = createAsyncThunk<FullOffer, FavoriteStatusData, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'data/changeFavoriteStatus',
+  async ({offerId, status}, {extra: api}) => {
+    const {data} = await api.post<FullOffer>(ApiRoute.ChangeFavouriteStatus(offerId, status));
+    return data;
+  },
+);

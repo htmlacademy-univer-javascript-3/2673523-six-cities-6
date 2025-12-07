@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import {NameSpace} from '../../const';
 import {FullOffer, Reviews, ShortOffers} from '../../types/offer-info';
 import {
+  changeFavoriteStatusAction,
   fetchFavoritesAction,
   fetchOfferAction,
   fetchOffersAction,
@@ -65,9 +66,29 @@ export const appData = createSlice({
       .addCase(postCommentAction.rejected, (state) => {
         state.isCommentPosting = false;
       })
-      // Favorites
       .addCase(fetchFavoritesAction.fulfilled, (state, action) => {
         state.favorites = action.payload;
+      })
+      .addCase(changeFavoriteStatusAction.fulfilled, (state, action) => {
+        const updatedOffer = action.payload;
+
+        if (state.offer && state.offer.id === updatedOffer.id) {
+          state.offer.isFavorite = updatedOffer.isFavorite;
+        }
+
+        state.offers = state.offers.map((offer) =>
+          offer.id === updatedOffer.id ? {...offer, isFavorite: updatedOffer.isFavorite} : offer
+        );
+
+        state.nearbyOffers = state.nearbyOffers.map((offer) =>
+          offer.id === updatedOffer.id ? {...offer, isFavorite: updatedOffer.isFavorite} : offer
+        );
+
+        if (updatedOffer.isFavorite) {
+          state.favorites.push(updatedOffer);
+        } else {
+          state.favorites = state.favorites.filter((offer) => offer.id !== updatedOffer.id);
+        }
       });
   }
 });

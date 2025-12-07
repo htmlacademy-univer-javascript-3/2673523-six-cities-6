@@ -5,12 +5,13 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { logoutAction } from '../../store/api-actions';
 import { AppRoute, AuthStatus } from '../../const';
 import {getAuthStatus, getUserData} from '../../store/user-process/selectors.ts';
-
+import { getFavorites } from '../../store/app-data/selectors.ts';
 
 function Header(): JSX.Element {
   const dispatch = useAppDispatch();
   const user = useAppSelector(getUserData);
   const authStatus = useAppSelector(getAuthStatus);
+  const favorites = useAppSelector(getFavorites);
 
   const handleSignOut = (evt: React.MouseEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
@@ -36,7 +37,7 @@ function Header(): JSX.Element {
                       <span className="header__user-name user__name">
                         {user?.email}
                       </span>
-                      <span className="header__favorite-count">3</span>
+                      <span className="header__favorite-count">{favorites.length}</span>
                     </Link>
                   </li>
                   <li className="header__nav-item">

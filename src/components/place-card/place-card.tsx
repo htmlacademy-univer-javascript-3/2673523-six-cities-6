@@ -1,6 +1,10 @@
-import { Link } from 'react-router-dom';
-import {ShortOffer} from '../../types/offer-info.ts';
-import {PlaceCardConfigs, PlaceCardVariant} from '../../types/place-card-types.ts';
+import { Link, useNavigate } from 'react-router-dom';
+import { ShortOffer } from '../../types/offer-info.ts';
+import { PlaceCardConfigs, PlaceCardVariant } from '../../types/place-card-types.ts';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getAuthStatus } from '../../store/user-process/selectors.ts';
+import { AppRoute, AuthStatus } from '../../const.ts';
+import { changeFavoriteStatusAction } from '../../store/api-actions.ts';
 
 type PlaceCardProps = {
   offer: ShortOffer;
@@ -15,12 +19,28 @@ function PlaceCard({ offer, variant, onMouseEnter, onMouseLeave, isActive }: Pla
   const ratingWidth = `${Math.round(rating) * 20}%`;
   const config = PlaceCardConfigs[variant];
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const authStatus = useAppSelector(getAuthStatus);
+
   const handleMouseEnter = () => {
     onMouseEnter?.(id);
   };
 
   const handleMouseLeave = () => {
     onMouseLeave?.();
+  };
+
+  const handleBookmarkClick = () => {
+    if (authStatus !== AuthStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
+    }
+
+    dispatch(changeFavoriteStatusAction({
+      offerId: id,
+      status: isFavorite ? 0 : 1
+    }));
   };
 
   const articleClassName = `${config.classNamePref}__card place-card ${isActive ? 'place-card--active' : ''}`;
@@ -55,6 +75,7 @@ function PlaceCard({ offer, variant, onMouseEnter, onMouseLeave, isActive }: Pla
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button
+            onClick={handleBookmarkClick}
             className={`place-card__bookmark-button button ${isFavorite ? 'place-card__bookmark-button--active' : ''}`}
             type="button"
           >
