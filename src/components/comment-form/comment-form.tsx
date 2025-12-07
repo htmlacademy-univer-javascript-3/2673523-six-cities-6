@@ -2,6 +2,7 @@ import { useState, ChangeEvent, FormEvent, Fragment } from 'react';
 import {MIN_COMMENT_LENGTH, MAX_COMMENT_LENGTH} from '../../const.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {postCommentAction} from '../../store/api-actions.ts';
+import {getCommentPostingStatus} from '../../store/app-data/selectors.ts';
 
 type CommentFormProps = {
   offerId: string;
@@ -17,7 +18,7 @@ const starRatings = [
 
 function CommentForm({ offerId }: CommentFormProps): JSX.Element {
   const dispatch = useAppDispatch();
-  const isSubmitting = useAppSelector((state) => state.isCommentPosting);
+  const isSubmitting = useAppSelector(getCommentPostingStatus);
 
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');

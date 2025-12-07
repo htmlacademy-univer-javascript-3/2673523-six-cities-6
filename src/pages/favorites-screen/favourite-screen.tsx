@@ -6,10 +6,11 @@ import Header from '../../components/header/header.tsx';
 import {ShortOffer} from '../../types/offer-info.ts';
 import { AppRoute } from '../../const.ts';
 import {fetchFavoritesAction} from '../../store/api-actions.ts';
+import {getFavorites} from '../../store/app-data/selectors.ts';
 
 function FavouriteScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  const favoriteOffers = useAppSelector((state) => state.favorites);
+  const favoriteOffers = useAppSelector(getFavorites);
 
   useEffect(() => {
     dispatch(fetchFavoritesAction());

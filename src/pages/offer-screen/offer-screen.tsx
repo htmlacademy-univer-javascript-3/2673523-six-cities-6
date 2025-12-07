@@ -12,16 +12,18 @@ import { Point } from '../../types/map-types.ts';
 import { PlaceCardVariant } from '../../types/place-card-types.ts';
 import {AuthStatus, MAX_NEARBY_OFFERS} from '../../const.ts';
 import {fetchOfferAction} from '../../store/api-actions.ts';
+import {getNearbyOffers, getOffer, getOfferDataLoadingStatus, getReviews} from '../../store/app-data/selectors.ts';
+import {getAuthStatus} from '../../store/user-process/selectors.ts';
 
 function OfferScreen(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
 
-  const fullOffer = useAppSelector((state) => state.offer);
-  const nearbyOffers = useAppSelector((state) => state.nearbyOffers);
-  const reviews = useAppSelector((state) => state.reviews);
-  const isOfferLoading = useAppSelector((state) => state.isOfferDataLoading);
-  const authStatus = useAppSelector((state) => state.authStatus);
+  const fullOffer = useAppSelector(getOffer);
+  const nearbyOffers = useAppSelector(getNearbyOffers);
+  const reviews = useAppSelector(getReviews);
+  const isOfferLoading = useAppSelector(getOfferDataLoadingStatus);
+  const authStatus = useAppSelector(getAuthStatus);
 
   const [activeNearbyOffer, setActiveNearbyOffer] = useState<ShortOffer | undefined>(undefined);
   useEffect(() => {

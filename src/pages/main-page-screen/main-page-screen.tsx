@@ -6,18 +6,20 @@ import {City, ShortOffer} from '../../types/offer-info.ts';
 import {Point} from '../../types/map-types.ts';
 import {PlaceCardVariant} from '../../types/place-card-types.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {changeCity, setSortType} from '../../store/actions.ts';
 import {SortType} from '../../const.ts';
 import SortOptions from '../../components/sort-options/sort-options.tsx';
 import Header from '../../components/header/header.tsx';
+import {getCity, getSortType} from '../../store/app-process/selectors.ts';
+import {getOffers} from '../../store/app-data/selectors.ts';
+import {changeCity, setSortType} from '../../store/app-process/app-process.ts';
 
 
 function MainPageScreen(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const currentCity = useAppSelector((state) => state.city);
-  const allOffers = useAppSelector((state) => state.offers);
-  const activeSortType = useAppSelector((state) => state.sortType);
+  const currentCity = useAppSelector(getCity);
+  const allOffers = useAppSelector(getOffers);
+  const activeSortType = useAppSelector(getSortType);
 
   const cityOffers = useMemo(
     () => allOffers.filter((offer) => offer.city.name === currentCity),
