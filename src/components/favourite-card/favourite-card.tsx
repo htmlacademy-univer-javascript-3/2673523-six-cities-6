@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
-import {ShortOffer} from '../../types/offer-info';
+import { ShortOffer } from '../../types/offer-info';
+import { useAppDispatch } from '../../hooks';
+import { changeFavoriteStatusAction } from '../../store/api-actions';
+import { AppRoute } from '../../const';
 
 type FavoriteCardProps = {
   offer: ShortOffer;
@@ -9,6 +12,17 @@ function FavoriteCard({ offer }: FavoriteCardProps): JSX.Element {
   const { id, title, type, price, previewImage, isPremium, rating } = offer;
   const ratingWidth = `${Math.round(rating) * 20}%`;
 
+  const dispatch = useAppDispatch();
+
+  const handleBookmarkClick = () => {
+    dispatch(changeFavoriteStatusAction({
+      offerId: id,
+      status: 0
+    }));
+  };
+
+  const offerLink = AppRoute.Offers.replace(':id', id);
+
   return (
     <article className="favorites__card place-card">
       {isPremium && (
@@ -17,7 +31,7 @@ function FavoriteCard({ offer }: FavoriteCardProps): JSX.Element {
         </div>
       )}
       <div className="favorites__image-wrapper place-card__image-wrapper">
-        <Link to={`/offer/${id}`}>
+        <Link to={offerLink}>
           <img
             className="place-card__image"
             src={previewImage}
@@ -34,6 +48,7 @@ function FavoriteCard({ offer }: FavoriteCardProps): JSX.Element {
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
           <button
+            onClick={handleBookmarkClick}
             className="place-card__bookmark-button place-card__bookmark-button--active button"
             type="button"
           >
@@ -50,7 +65,7 @@ function FavoriteCard({ offer }: FavoriteCardProps): JSX.Element {
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`/offer/${id}`}>{title}</Link>
+          <Link to={offerLink}>{title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

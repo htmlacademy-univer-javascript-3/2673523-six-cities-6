@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // Добавляем useNavigate
 import {useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import Header from '../../components/header/header.tsx';
@@ -10,18 +10,21 @@ import LoadingPage from '../loading-page/loading-page.tsx';
 import { ShortOffer } from '../../types/offer-info.ts';
 import { Point } from '../../types/map-types.ts';
 import { PlaceCardVariant } from '../../types/place-card-types.ts';
-import {AuthStatus, MAX_NEARBY_OFFERS} from '../../const.ts';
-import {fetchOfferAction} from '../../store/api-actions.ts';
+import {AuthStatus, AppRoute, MAX_NEARBY_OFFERS} from '../../const.ts';
+import {changeFavoriteStatusAction, fetchOfferAction} from '../../store/api-actions.ts';
+import {getNearbyOffers, getOffer, getOfferDataLoadingStatus, getReviews} from '../../store/app-data/selectors.ts';
+import {getAuthStatus} from '../../store/user-process/selectors.ts';
 
 function OfferScreen(): JSX.Element {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const fullOffer = useAppSelector((state) => state.offer);
-  const nearbyOffers = useAppSelector((state) => state.nearbyOffers);
-  const reviews = useAppSelector((state) => state.reviews);
-  const isOfferLoading = useAppSelector((state) => state.isOfferDataLoading);
-  const authStatus = useAppSelector((state) => state.authStatus);
+  const fullOffer = useAppSelector(getOffer);
+  const nearbyOffers = useAppSelector(getNearbyOffers);
+  const reviews = useAppSelector(getReviews);
+  const isOfferLoading = useAppSelector(getOfferDataLoadingStatus);
+  const authStatus = useAppSelector(getAuthStatus);
 
   const [activeNearbyOffer, setActiveNearbyOffer] = useState<ShortOffer | undefined>(undefined);
   useEffect(() => {
@@ -33,6 +36,18 @@ function OfferScreen(): JSX.Element {
   if (isOfferLoading || !fullOffer) {
     return <LoadingPage />;
   }
+
+  const handleBookmarkClick = () => {
+    if (authStatus !== AuthStatus.Auth) {
+      navigate(AppRoute.Login);
+      return;
+    }
+
+    dispatch(changeFavoriteStatusAction({
+      offerId: fullOffer.id,
+      status: fullOffer.isFavorite ? 0 : 1
+    }));
+  };
 
   const nearbyOffersSlice = nearbyOffers.slice(0, MAX_NEARBY_OFFERS);
 
@@ -88,6 +103,7 @@ function OfferScreen(): JSX.Element {
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{title}</h1>
                 <button
+                  onClick={handleBookmarkClick}
                   className={`offer__bookmark-button button ${isFavorite ? 'offer__bookmark-button--active' : ''}`}
                   type="button"
                 >

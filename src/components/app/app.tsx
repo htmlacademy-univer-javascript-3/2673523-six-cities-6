@@ -1,6 +1,4 @@
 import {Route, Routes} from 'react-router-dom';
-import {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
 
 import MainPageScreen from '../../pages/main-page-screen/main-page-screen';
 import LoginScreen from '../../pages/login-screen/login-screen.tsx';
@@ -11,20 +9,16 @@ import PrivateRoute from '../private-route/private-route.tsx';
 import HistoryRouter from '../history-route/history-route.tsx';
 import LoadingPage from '../../pages/loading-page/loading-page.tsx';
 
-import { reviews } from '../../mocks/review.ts';
 import {AppRoute, AuthStatus} from '../../const.ts';
-import {loadReviews} from '../../store/actions.ts';
 import {useAppSelector} from '../../hooks';
 import browserHistory from '../../browse-history.ts';
+import {getAuthStatus} from '../../store/user-process/selectors.ts';
+import {getOffersDataLoadingStatus} from '../../store/app-data/selectors.ts';
 
 function App() {
-  const dispatch = useDispatch();
-  const authStatus = useAppSelector((state) => state.authStatus);
-  const isOffersDataLoading = useAppSelector((state) => state.isOffersDataLoading);
+  const authStatus = useAppSelector(getAuthStatus);
+  const isOffersDataLoading = useAppSelector(getOffersDataLoadingStatus);
 
-  useEffect(() => {
-    dispatch(loadReviews(reviews));
-  }, [dispatch]);
 
   if (authStatus === AuthStatus.Unknown || isOffersDataLoading) {
     return (

@@ -3,6 +3,7 @@ import {AppRoute, AuthStatus} from '../../const';
 import {useAppSelector} from '../../hooks';
 import {ReactNode} from 'react';
 import LoadingPage from '../../pages/loading-page/loading-page';
+import {getAuthStatus} from '../../store/user-process/selectors.ts';
 
 type PrivateRouteProps = {
   children: ReactNode;
@@ -11,7 +12,7 @@ type PrivateRouteProps = {
 function PrivateRoute(props: PrivateRouteProps): ReactNode {
   const {children} = props;
 
-  const authStatus = useAppSelector((state) => state.authStatus);
+  const authStatus = useAppSelector(getAuthStatus);
 
   if (authStatus === AuthStatus.Unknown) {
     return <LoadingPage />;

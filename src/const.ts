@@ -44,7 +44,7 @@ export const ApiRoute = {
   GetOffer: (offersId : string) => `/offers/${offersId}`,
   GetNearbyOffers: (offerId : string) => `/offers/${offerId}/nearby`,
   GetOfferComments: (offerId : string) => `comments/${offerId}`,
-  ChangeFavouriteStatus: (offerId : string, status: number) => `/favourites/${offerId}/${status}`,
+  ChangeFavouriteStatus: (offerId : string, status: number) => `/favorite/${offerId}/${status}`,
 };
 
 export const URL_MARKER_CURRENT =
@@ -61,3 +61,9 @@ export const BACKEND_URL = 'https://14.design.htmlacademy.pro/six-cities';
 export const REQUEST_TIMEOUT = 5000;
 export const AUTH_TOKEN_KEY_NAME = 'six-cities-token';
 export const TIMEOUT_SHOW_ERROR = 2000;
+
+export enum NameSpace {
+  Data = 'DATA',
+  App = 'APP',
+  User = 'USER',
+}

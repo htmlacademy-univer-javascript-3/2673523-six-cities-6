@@ -6,18 +6,21 @@ import {City, ShortOffer} from '../../types/offer-info.ts';
 import {Point} from '../../types/map-types.ts';
 import {PlaceCardVariant} from '../../types/place-card-types.ts';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {changeCity, setSortType} from '../../store/actions.ts';
 import {SortType} from '../../const.ts';
 import SortOptions from '../../components/sort-options/sort-options.tsx';
 import Header from '../../components/header/header.tsx';
+import {getCity, getSortType} from '../../store/app-process/selectors.ts';
+import {getOffers} from '../../store/app-data/selectors.ts';
+import {changeCity, setSortType} from '../../store/app-process/app-process.ts';
+import MainEmpty from '../../components/main-empty/main-empty.tsx';
 
 
 function MainPageScreen(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const currentCity = useAppSelector((state) => state.city);
-  const allOffers = useAppSelector((state) => state.offers);
-  const activeSortType = useAppSelector((state) => state.sortType);
+  const currentCity = useAppSelector(getCity);
+  const allOffers = useAppSelector(getOffers);
+  const activeSortType = useAppSelector(getSortType);
 
   const cityOffers = useMemo(
     () => allOffers.filter((offer) => offer.city.name === currentCity),
@@ -87,34 +90,37 @@ function MainPageScreen(): JSX.Element {
             />
           </section>
         </div>
-        <div className="cities">
-          <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offersCount} places to stay in {cityName}</b>
-              <SortOptions
-                activeSortType={activeSortType}
-                onSortChange={handleSortChange}
-              />
-              <div className="cities__places-list places__list tabs__content">
-                <PlacesList
-                  offers={sortedOffers}
-                  variant={PlaceCardVariant.Cities}
-                  onCardHover={handleCardHover}
-                  activeOfferId={activeOffer?.id || null}
+        <div className="cities"> {
+          offersCount === 0 ? <MainEmpty city={currentCity} /> : (
+            <div className="cities__places-container container">
+              <section className="cities__places places">
+                <h2 className="visually-hidden">Places</h2>
+                <b className="places__found">{offersCount} places to stay in {cityName}</b>
+                <SortOptions
+                  activeSortType={activeSortType}
+                  onSortChange={handleSortChange}
                 />
-              </div>
-            </section>
-            <div className="cities__right-section">
-              <section className="cities__map map">
-                <Map
-                  city={city}
-                  points={points}
-                  selectedPoint={selectedPoint}
-                />
+                <div className="cities__places-list places__list tabs__content">
+                  <PlacesList
+                    offers={sortedOffers}
+                    variant={PlaceCardVariant.Cities}
+                    onCardHover={handleCardHover}
+                    activeOfferId={activeOffer?.id || null}
+                  />
+                </div>
               </section>
+              <div className="cities__right-section">
+                <section className="cities__map map">
+                  <Map
+                    city={city}
+                    points={points}
+                    selectedPoint={selectedPoint}
+                  />
+                </section>
+              </div>
             </div>
-          </div>
+          )
+        }
         </div>
       </main>
     </div>
