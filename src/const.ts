@@ -1,15 +1,3 @@
-import {offers} from './mocks/offers.ts';
-import { hosts } from './mocks/hosts.ts';
-import {cities} from './mocks/cities.ts';
-import {reviews} from './mocks/review.ts';
-
-export const Setting = {
-  Offers: offers,
-  Hosts: hosts,
-  Cities:cities,
-  reviews: reviews
-};
-
 export const MIN_COMMENT_LENGTH = 50;
 export const MAX_COMMENT_LENGTH = 300;
 export const MAX_NEARBY_OFFERS = 3;
