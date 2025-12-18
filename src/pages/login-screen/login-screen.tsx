@@ -43,6 +43,7 @@ function LoginScreen(): JSX.Element {
                   type="email"
                   name="email"
                   placeholder="Email"
+                  data-testid="EmailElement"
                   required
                 />
               </div>
@@ -54,6 +55,7 @@ function LoginScreen(): JSX.Element {
                   type="password"
                   name="password"
                   placeholder="Password"
+                  data-testid="passwordElement"
                   required
                 />
               </div>

@@ -1,33 +1,28 @@
-import {Route, Routes} from 'react-router-dom';
-
+import { Route, Routes } from 'react-router-dom';
 import MainPageScreen from '../../pages/main-page-screen/main-page-screen';
-import LoginScreen from '../../pages/login-screen/login-screen.tsx';
-import FavouriteScreen from '../../pages/favorites-screen/favourite-screen.tsx';
-import OfferScreen from '../../pages/offer-screen/offer-screen.tsx';
-import NotFoundScreen from '../../pages/not-found-screen/not-found-screen.tsx';
-import PrivateRoute from '../private-route/private-route.tsx';
-import HistoryRouter from '../history-route/history-route.tsx';
-import LoadingPage from '../../pages/loading-page/loading-page.tsx';
+import LoginScreen from '../../pages/login-screen/login-screen';
+import FavouriteScreen from '../../pages/favorites-screen/favourite-screen';
+import OfferScreen from '../../pages/offer-screen/offer-screen';
+import NotFoundScreen from '../../pages/not-found-screen/not-found-screen';
+import PrivateRoute from '../private-route/private-route';
+import LoadingPage from '../../pages/loading-page/loading-page';
 
-import {AppRoute, AuthStatus} from '../../const.ts';
-import {useAppSelector} from '../../hooks';
-import browserHistory from '../../browse-history.ts';
-import {getAuthStatus} from '../../store/user-process/selectors.ts';
-import {getOffersDataLoadingStatus} from '../../store/app-data/selectors.ts';
+import { AppRoute, AuthStatus } from '../../const';
+import { useAppSelector } from '../../hooks';
+import { getAuthStatus } from '../../store/user-process/selectors';
+import { getOffersDataLoadingStatus } from '../../store/app-data/selectors';
+import { HelmetProvider } from 'react-helmet-async';
 
 function App() {
   const authStatus = useAppSelector(getAuthStatus);
   const isOffersDataLoading = useAppSelector(getOffersDataLoadingStatus);
 
-
   if (authStatus === AuthStatus.Unknown || isOffersDataLoading) {
-    return (
-      <LoadingPage />
-    );
+    return <LoadingPage />;
   }
 
   return (
-    <HistoryRouter history={browserHistory}>
+    <HelmetProvider>
       <Routes>
         <Route
           path={AppRoute.Root}
@@ -54,7 +49,7 @@ function App() {
           element={<NotFoundScreen />}
         />
       </Routes>
-    </HistoryRouter>
+    </HelmetProvider>
   );
 }
 

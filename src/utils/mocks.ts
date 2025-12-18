@@ -4,6 +4,7 @@ import {State} from '../types/state.ts';
 import { createAPI } from '../service/api.ts';
 import {UserData} from '../types/user-data.ts';
 import {FullOffer, Review, Reviews, ShortOffer} from '../types/offer-info.ts';
+import {AppData} from '../types/app-data.ts';
 
 export type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action>;
 
@@ -46,6 +47,30 @@ export const mockReview : Review = {
   user: { id: '2', name: 'User', avatarUrl: 'img/avatar.png', isPro: false },
   comment: 'Great!',
   rating: 5
+};
+
+export const mockOffer = {
+  id: '1',
+  title: 'Nice place',
+  type: 'apartment',
+  price: 120,
+  previewImage: 'img/test.jpg',
+  isPremium: false,
+  isFavorite: true,
+  rating: 4,
+  city: { name: 'Paris', location: { latitude: 0, longitude: 0, zoom: 10 } },
+  location: { latitude: 0, longitude: 0, zoom: 10 },
+};
+
+export const mockAppData: AppData = {
+  offers: [],
+  isOffersDataLoading: false,
+  offer: null,
+  nearbyOffers: [],
+  reviews: [],
+  isOfferDataLoading: false,
+  isCommentPosting: false,
+  favorites: [],
 };
 
 export const mockReviews : Reviews = [mockReview];
