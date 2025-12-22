@@ -7,7 +7,7 @@ import {
   fetchOffersAction,
   postCommentAction
 } from '../api-actions';
-import {AppData} from '../../types/app-data.ts';
+import {AppData} from '../../types/app-data';
 
 
 const initialState: AppData = {

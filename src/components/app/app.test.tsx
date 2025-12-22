@@ -76,7 +76,7 @@ describe('Application Routing', () => {
     expect(screen.getByText(/Offer Screen/i)).toBeInTheDocument();
   });
 
-  it('should render "Favorites Screen" when user navigate to "/favourites" and AUTHORIZED', () => {
+  it('should render "Favorites Screen" when user navigate to "/favorites" and AUTHORIZED', () => {
     const { withStoreComponent } = withStore(
       withHistory(<App />, mockHistory),
       {
@@ -85,10 +85,11 @@ describe('Application Routing', () => {
       }
     );
 
-    mockHistory.push(AppRoute.Favourites);
+    mockHistory.push(AppRoute.Favorites);
     render(withStoreComponent);
 
-    expect(screen.getByText(/Favorites Screen/i)).toBeInTheDocument();
+    expect(screen.getByText(/Nothing yet saved/i)).toBeInTheDocument();
+    expect(screen.getByText(/Save properties to narrow down search/i)).toBeInTheDocument();
   });
 
   it('should redirect to "LoginScreen" when user navigate to "/favourites" and NOT AUTHORIZED', () => {
@@ -100,7 +101,7 @@ describe('Application Routing', () => {
       }
     );
 
-    mockHistory.push(AppRoute.Favourites);
+    mockHistory.push(AppRoute.Favorites);
     render(withStoreComponent);
 
     expect(screen.getByText(/Login Screen/i)).toBeInTheDocument();

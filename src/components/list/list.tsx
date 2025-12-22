@@ -1,4 +1,4 @@
-import {Points} from '../../types/map-types.ts';
+import {Point, Points} from '../../types/map-types';
 
 type ListProps = {
   points: Points;
@@ -10,22 +10,17 @@ function List(props: ListProps): JSX.Element {
 
   return (
     <ul className="list">
-      {points.map((point, index) => {
-        const keyValue = `${index}-${point.title}`;
-        return (
-          <li
-            className="list__item"
-            key={keyValue}
-            // Передаем данные напрямую через замыкание
-            onMouseEnter={(evt) => {
-              evt.preventDefault();
-              onListItemHover(point.title);
-            }}
-          >
-            {point.title}
-          </li>
-        );
-      })}
+      {points.map((point : Point) => (
+        <li
+          className="list__item"
+          key={point.id}
+          onMouseEnter={() => {
+            onListItemHover(point.title);
+          }}
+        >
+          {point.title}
+        </li>
+      ))}
     </ul>
   );
 }

@@ -1,19 +1,18 @@
-import {useMemo, useState} from 'react';
-import PlacesList from '../../components/places-list/places-list.tsx';
-import CitiesList from '../../components/cities-list/cities-list.tsx';
-import Map from '../../components/map/map.tsx';
-import {City, ShortOffer} from '../../types/offer-info.ts';
-import {Point} from '../../types/map-types.ts';
-import {PlaceCardVariant} from '../../types/place-card-types.ts';
-import {useAppDispatch, useAppSelector} from '../../hooks';
-import {SortType} from '../../const.ts';
-import SortOptions from '../../components/sort-options/sort-options.tsx';
-import Header from '../../components/header/header.tsx';
-import {getCity, getSortType} from '../../store/app-process/selectors.ts';
-import {getOffers} from '../../store/app-data/selectors.ts';
-import {changeCity, setSortType} from '../../store/app-process/app-process.ts';
-import MainEmpty from '../../components/main-empty/main-empty.tsx';
-
+import { useMemo, useState } from 'react';
+import PlacesList from '../../components/places-list/places-list';
+import CitiesList from '../../components/cities-list/cities-list';
+import Map from '../../components/map/map';
+import { City, ShortOffer } from '../../types/offer-info';
+import { Point } from '../../types/map-types';
+import { PlaceCardVariant } from '../../types/place-card-types';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { SortType } from '../../const';
+import SortOptions from '../../components/sort-options/sort-options';
+import Header from '../../components/header/header';
+import { getCity, getSortType } from '../../store/app-process/selectors';
+import { getOffers } from '../../store/app-data/selectors';
+import { changeCity, setSortType } from '../../store/app-process/app-process';
+import MainEmpty from '../../components/main-empty/main-empty';
 
 function MainPageScreen(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -43,6 +42,8 @@ function MainPageScreen(): JSX.Element {
   const [activeOffer, setActiveOffer] = useState<ShortOffer | undefined>(undefined);
 
   const offersCount = sortedOffers.length;
+  const isEmpty = offersCount === 0;
+
   const city: City | undefined = cityOffers[0]?.city;
 
   const handleCityChange = (newCity: string) => {
@@ -57,7 +58,6 @@ function MainPageScreen(): JSX.Element {
     const currentOffer = cityOffers.find((offer) => offer.id === offerId);
     setActiveOffer(currentOffer);
   };
-
 
   const points: Point[] = cityOffers.map((offer) => ({
     id: offer.id,
@@ -75,12 +75,11 @@ function MainPageScreen(): JSX.Element {
     }
     : undefined;
 
-  const cityName = offersCount > 0 ? cityOffers[0].city.name : 'No offers';
   return (
     <div className="page page--gray page--main">
       <Header />
 
-      <main className="page__main page__main--index">
+      <main className={`page__main page__main--index ${isEmpty ? 'page__main--index-empty' : ''}`}>
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
@@ -90,12 +89,14 @@ function MainPageScreen(): JSX.Element {
             />
           </section>
         </div>
-        <div className="cities"> {
-          offersCount === 0 ? <MainEmpty city={currentCity} /> : (
+        <div className="cities">
+          {isEmpty ? (
+            <MainEmpty city={currentCity} />
+          ) : (
             <div className="cities__places-container container">
               <section className="cities__places places">
                 <h2 className="visually-hidden">Places</h2>
-                <b className="places__found">{offersCount} places to stay in {cityName}</b>
+                <b className="places__found">{offersCount} places to stay in {currentCity}</b>
                 <SortOptions
                   activeSortType={activeSortType}
                   onSortChange={handleSortChange}
@@ -119,8 +120,7 @@ function MainPageScreen(): JSX.Element {
                 </section>
               </div>
             </div>
-          )
-        }
+          )}
         </div>
       </main>
     </div>

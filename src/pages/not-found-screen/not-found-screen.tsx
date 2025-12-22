@@ -1,6 +1,6 @@
-import Logo from '../../components/logo/logo.tsx';
 import {Link} from 'react-router-dom';
-import {AppRoute} from '../../const.ts';
+import Logo from '../../components/logo/logo';
+import {AppRoute} from '../../const';
 
 
 function NotFoundScreen() : JSX.Element {

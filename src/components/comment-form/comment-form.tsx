@@ -1,20 +1,22 @@
 import { useState, ChangeEvent, FormEvent, Fragment } from 'react';
-import {MIN_COMMENT_LENGTH, MAX_COMMENT_LENGTH} from '../../const.ts';
+import {MIN_COMMENT_LENGTH, MAX_COMMENT_LENGTH} from '../../const';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {postCommentAction} from '../../store/api-actions.ts';
-import {getCommentPostingStatus} from '../../store/app-data/selectors.ts';
+import {postCommentAction} from '../../store/api-actions';
+import {getCommentPostingStatus} from '../../store/app-data/selectors';
 
 type CommentFormProps = {
   offerId: string;
 };
 
-const starRatings = [
+const STARS_RATING = [
   { value: 5, title: 'perfect' },
   { value: 4, title: 'good' },
   { value: 3, title: 'not bad' },
   { value: 2, title: 'badly' },
   { value: 1, title: 'terribly' },
 ];
+
+const DEFAULT_RATING = 0;
 
 function CommentForm({ offerId }: CommentFormProps): JSX.Element {
   const dispatch = useAppDispatch();
@@ -31,10 +33,10 @@ function CommentForm({ offerId }: CommentFormProps): JSX.Element {
     setComment(evt.target.value);
   };
 
-  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
-    if (rating === 0 || comment.length < MIN_COMMENT_LENGTH || comment.length > MAX_COMMENT_LENGTH) {
+    if (rating === DEFAULT_RATING || comment.length < MIN_COMMENT_LENGTH || comment.length > MAX_COMMENT_LENGTH) {
       return;
     }
 
@@ -55,11 +57,11 @@ function CommentForm({ offerId }: CommentFormProps): JSX.Element {
       className="reviews__form form"
       action="#"
       method="post"
-      onSubmit={handleSubmit}
+      onSubmit={handleFormSubmit}
     >
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
-        {starRatings.map(({ value, title }) => (
+        {STARS_RATING.map(({ value, title }) => (
           <Fragment key={value}>
             <input
               className="form__rating-input visually-hidden"

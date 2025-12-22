@@ -15,7 +15,7 @@ import {
   changeFavoriteStatusAction,
   clearErrorAction
 } from './api-actions';
-import { ApiRoute, TIMEOUT_SHOW_ERROR } from '../const';
+import { API_ROUTE, TIMEOUT_SHOW_ERROR } from '../const';
 import { redirectToRoute } from './actions';
 import { setError } from './app-process/app-process';
 import * as tokenStorage from '../service/token';
@@ -45,7 +45,7 @@ describe('Async actions', () => {
   describe('fetchOffersAction', () => {
     it('should dispatch "pending" and "fulfilled" with mocked offers when server returns 200', async () => {
       const mockOffers = [mockShortOffer];
-      mockAxiosAdapter.onGet(ApiRoute.GetOffers).reply(200, mockOffers);
+      mockAxiosAdapter.onGet(API_ROUTE.GetOffers).reply(200, mockOffers);
 
       await store.dispatch(fetchOffersAction());
 
@@ -60,7 +60,7 @@ describe('Async actions', () => {
     });
 
     it('should dispatch "pending" and "rejected" when server returns 400', async () => {
-      mockAxiosAdapter.onGet(ApiRoute.GetOffers).reply(400);
+      mockAxiosAdapter.onGet(API_ROUTE.GetOffers).reply(400);
 
       await store.dispatch(fetchOffersAction());
       const actions = extractActionsTypes(store.getActions());
@@ -74,7 +74,7 @@ describe('Async actions', () => {
 
   describe('checkAuthAction', () => {
     it('should dispatch "pending" and "fulfilled" with user data when 200', async () => {
-      mockAxiosAdapter.onGet(ApiRoute.Login).reply(200, mockUser);
+      mockAxiosAdapter.onGet(API_ROUTE.Login).reply(200, mockUser);
 
       await store.dispatch(checkAuthAction());
       const actions = extractActionsTypes(store.getActions());
@@ -88,7 +88,7 @@ describe('Async actions', () => {
     });
 
     it('should dispatch "pending" and "rejected" when 401', async () => {
-      mockAxiosAdapter.onGet(ApiRoute.Login).reply(401);
+      mockAxiosAdapter.onGet(API_ROUTE.Login).reply(401);
 
       await store.dispatch(checkAuthAction());
       const actions = extractActionsTypes(store.getActions());
@@ -103,7 +103,7 @@ describe('Async actions', () => {
   describe('loginAction', () => {
     it('should dispatch "pending", "redirectToRoute", "fulfilled" and save token when 200', async () => {
       const authData: AuthData = { login: 'test@test.ru', password: '123' };
-      mockAxiosAdapter.onPost(ApiRoute.Login).reply(200, mockUser);
+      mockAxiosAdapter.onPost(API_ROUTE.Login).reply(200, mockUser);
 
       const mockSaveToken = vi.spyOn(tokenStorage, 'saveToken');
 
@@ -123,7 +123,7 @@ describe('Async actions', () => {
 
   describe('logoutAction', () => {
     it('should dispatch "pending", "fulfilled" and drop token when 204', async () => {
-      mockAxiosAdapter.onDelete(ApiRoute.Logout).reply(204);
+      mockAxiosAdapter.onDelete(API_ROUTE.Logout).reply(204);
       const mockDropToken = vi.spyOn(tokenStorage, 'dropToken');
 
       await store.dispatch(logoutAction());
@@ -140,9 +140,9 @@ describe('Async actions', () => {
   describe('fetchOfferAction (Promise.all)', () => {
     it('should fetch offer, nearby and reviews together', async () => {
       const offerId = '1';
-      mockAxiosAdapter.onGet(ApiRoute.GetOffer(offerId)).reply(200, mockFullOffer);
-      mockAxiosAdapter.onGet(ApiRoute.GetNearbyOffers(offerId)).reply(200, [mockShortOffer]);
-      mockAxiosAdapter.onGet(ApiRoute.GetOfferComments(offerId)).reply(200, mockReviews);
+      mockAxiosAdapter.onGet(API_ROUTE.GetOffer(offerId)).reply(200, mockFullOffer);
+      mockAxiosAdapter.onGet(API_ROUTE.GetNearbyOffers(offerId)).reply(200, [mockShortOffer]);
+      mockAxiosAdapter.onGet(API_ROUTE.GetOfferComments(offerId)).reply(200, mockReviews);
 
       await store.dispatch(fetchOfferAction(offerId));
 
@@ -166,8 +166,8 @@ describe('Async actions', () => {
       const offerId = '1';
       const commentData = { offerId, comment: 'Nice', rating: 5 };
 
-      mockAxiosAdapter.onPost(ApiRoute.GetOfferComments(offerId)).reply(201);
-      mockAxiosAdapter.onGet(ApiRoute.GetOfferComments(offerId)).reply(200, mockReviews);
+      mockAxiosAdapter.onPost(API_ROUTE.GetOfferComments(offerId)).reply(201);
+      mockAxiosAdapter.onGet(API_ROUTE.GetOfferComments(offerId)).reply(200, mockReviews);
 
       await store.dispatch(postCommentAction(commentData));
 
@@ -179,7 +179,7 @@ describe('Async actions', () => {
 
   describe('fetchFavoritesAction', () => {
     it('should fetch favorites list', async () => {
-      mockAxiosAdapter.onGet(ApiRoute.Favourites).reply(200, [mockShortOffer]);
+      mockAxiosAdapter.onGet(API_ROUTE.Favourites).reply(200, [mockShortOffer]);
 
       await store.dispatch(fetchFavoritesAction());
 
@@ -193,7 +193,7 @@ describe('Async actions', () => {
       const payload = { offerId: '1', status: 1 };
       const updatedOffer = { ...mockFullOffer, isFavorite: true };
 
-      mockAxiosAdapter.onPost(ApiRoute.ChangeFavouriteStatus(payload.offerId, payload.status))
+      mockAxiosAdapter.onPost(API_ROUTE.ChangeFavouriteStatus(payload.offerId, payload.status))
         .reply(200, updatedOffer);
 
       await store.dispatch(changeFavoriteStatusAction(payload));

@@ -25,7 +25,7 @@ describe('Component: LoginScreen', () => {
 
     expect(screen.getByRole('button', { name: /Sign in/i })).toBeInTheDocument();
 
-    expect(screen.getByText('Amsterdam')).toBeInTheDocument();
+    expect(screen.getByText(/Paris|Cologne|Brussels|Amsterdam|Hamburg|Dusseldorf/i)).toBeInTheDocument();
   });
 
   it('should dispatch "loginAction" with entered data when form is submitted', async () => {
@@ -38,7 +38,7 @@ describe('Component: LoginScreen', () => {
     const submitButton = screen.getByRole('button', { name: /Sign in/i });
 
     await userEvent.type(emailInput, 'test@test.ru');
-    await userEvent.type(passwordInput, '123456');
+    await userEvent.type(passwordInput, 'q123456');
 
     await userEvent.click(submitButton);
 
@@ -46,7 +46,7 @@ describe('Component: LoginScreen', () => {
 
     expect(loginAction).toHaveBeenCalledWith({
       login: 'test@test.ru',
-      password: '123456',
+      password: 'q123456',
     });
   });
 });

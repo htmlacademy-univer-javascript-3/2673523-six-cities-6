@@ -1,10 +1,10 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { ShortOffer } from '../../types/offer-info.ts';
-import { PlaceCardConfigs, PlaceCardVariant } from '../../types/place-card-types.ts';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getAuthStatus } from '../../store/user-process/selectors.ts';
-import { AppRoute, AuthStatus } from '../../const.ts';
-import { changeFavoriteStatusAction } from '../../store/api-actions.ts';
+import {Link, useNavigate} from 'react-router-dom';
+import {ShortOffer} from '../../types/offer-info';
+import {PlaceCardConfigs, PlaceCardVariant} from '../../types/place-card-types';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {getAuthStatus} from '../../store/user-process/selectors';
+import {AppRoute, AuthStatus, FavoriteStatus, RATING_MULTIPLIER} from '../../const';
+import {changeFavoriteStatusAction} from '../../store/api-actions';
 
 type PlaceCardProps = {
   offer: ShortOffer;
@@ -16,8 +16,9 @@ type PlaceCardProps = {
 
 function PlaceCard({ offer, variant, onMouseEnter, onMouseLeave, isActive }: PlaceCardProps): JSX.Element {
   const { id, title, type, price, previewImage, isPremium, isFavorite, rating } = offer;
-  const ratingWidth = `${Math.round(rating) * 20}%`;
+  const ratingWidth = `${Math.round(rating) * RATING_MULTIPLIER}%`;
   const config = PlaceCardConfigs[variant];
+  const offerLink = AppRoute.Offers.replace(':id', id);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ function PlaceCard({ offer, variant, onMouseEnter, onMouseLeave, isActive }: Pla
 
     dispatch(changeFavoriteStatusAction({
       offerId: id,
-      status: isFavorite ? 0 : 1
+      status: isFavorite ? FavoriteStatus.Removed : FavoriteStatus.Added
     }));
   };
 
@@ -58,7 +59,7 @@ function PlaceCard({ offer, variant, onMouseEnter, onMouseLeave, isActive }: Pla
       )}
 
       <div className={`${config.classNamePref}__image-wrapper place-card__image-wrapper`}>
-        <Link to={`/offers/${id}`}>
+        <Link to={offerLink}>
           <img
             className="place-card__image"
             src={previewImage}
@@ -92,9 +93,9 @@ function PlaceCard({ offer, variant, onMouseEnter, onMouseLeave, isActive }: Pla
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`/offers/${id}`}>{title}</Link>
+          <Link to={offerLink}>{title}</Link>
         </h2>
-        <p className="place-card__type">{type}</p>
+        <p className="place-card__type" style={{ textTransform: 'capitalize' }}>{type}</p>
       </div>
     </article>
   );

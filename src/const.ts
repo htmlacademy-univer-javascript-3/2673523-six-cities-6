@@ -1,14 +1,18 @@
+import leaflet from 'leaflet';
+
 export const MIN_COMMENT_LENGTH = 50;
 export const MAX_COMMENT_LENGTH = 300;
 export const MAX_NEARBY_OFFERS = 3;
+export const MAX_OFFER_IMAGES = 6;
+export const MAX_OFFER_REVIEWS = 10;
 
 
 export enum AppRoute {
   Root = '/',
   Login = '/login',
-  Favourites = '/favourites',
+  Favorites = '/favorites',
   Offers = '/offers/:id',
-  NotFound = '/notFoundError',
+  NotFound = '*',
 }
 
 export enum AuthStatus {
@@ -24,22 +28,28 @@ export enum SortType {
   TopRatedFirst = 'Top rated first',
 }
 
-export const ApiRoute = {
+export const API_ROUTE = {
   GetOffers: '/offers',
   Login: '/login',
   Logout: '/logout',
   Favourites: '/favorite',
-  GetOffer: (offersId : string) => `/offers/${offersId}`,
+  GetOffer: (offerId : string) => `/offers/${offerId}`,
   GetNearbyOffers: (offerId : string) => `/offers/${offerId}/nearby`,
   GetOfferComments: (offerId : string) => `comments/${offerId}`,
   ChangeFavouriteStatus: (offerId : string, status: number) => `/favorite/${offerId}/${status}`,
 };
 
-export const URL_MARKER_CURRENT =
-  '/img/pin-active.svg';
+export const DEFAULT_CUSTOM_ICON = leaflet.icon({
+  iconUrl: '/img/pin.svg',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
 
-export const URL_MARKER_DEFAULT =
-  '/img/pin.svg';
+export const CURRENT_CUSTOM_ICON = leaflet.icon({
+  iconUrl: '/img/pin-active.svg',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+});
 
 export const CITIES = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
 
@@ -55,3 +65,12 @@ export enum NameSpace {
   App = 'APP',
   User = 'USER',
 }
+
+export const RATING_MULTIPLIER = 20;
+
+export enum FavoriteStatus {
+  Removed = 0,
+  Added = 1,
+}
+
+export const MAX_REVIEWS_COUNT = 10;

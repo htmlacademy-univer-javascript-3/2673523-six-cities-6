@@ -5,10 +5,10 @@ import MockAdapter from 'axios-mock-adapter';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import {Action} from 'redux';
-import {createAPI} from '../service/api.ts';
+import {createAPI} from '../service/api';
 import HistoryRouter from '../components/history-route/history-route';
-import {State} from '../types/state.ts';
-import {AppThunkDispatch} from './mocks.ts';
+import {State} from '../types/state';
+import {AppThunkDispatch} from './mocks';
 
 
 export function withHistory(component: JSX.Element, history?: MemoryHistory) {

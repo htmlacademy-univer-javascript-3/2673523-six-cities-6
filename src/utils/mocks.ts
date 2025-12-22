@@ -1,10 +1,10 @@
 import {ThunkDispatch} from '@reduxjs/toolkit';
 import {Action} from 'redux';
-import {State} from '../types/state.ts';
-import { createAPI } from '../service/api.ts';
-import {UserData} from '../types/user-data.ts';
-import {FullOffer, Review, Reviews, ShortOffer} from '../types/offer-info.ts';
-import {AppData} from '../types/app-data.ts';
+import {State} from '../types/state';
+import { createAPI } from '../service/api';
+import {UserData} from '../types/user-data';
+import {FullOffer, Review, Reviews, ShortOffer} from '../types/offer-info';
+import {AppData} from '../types/app-data';
 
 export type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action>;
 

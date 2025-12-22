@@ -14,7 +14,7 @@ describe('Component: PrivateRoute', () => {
   });
 
   beforeEach(() => {
-    mockHistory.push(AppRoute.Favourites);
+    mockHistory.push(AppRoute.Favorites);
   });
 
   it('should render loading indicator when user status is Unknown', () => {
@@ -42,7 +42,7 @@ describe('Component: PrivateRoute', () => {
     const componentWithRoutes = (
       <Routes>
         <Route path={AppRoute.Login} element={<span>Login Page</span>} />
-        <Route path={AppRoute.Favourites} element={
+        <Route path={AppRoute.Favorites} element={
           <PrivateRoute>
             <span>Private Content</span>
           </PrivateRoute>
@@ -72,7 +72,7 @@ describe('Component: PrivateRoute', () => {
       withHistory(
         <Routes>
           <Route path={AppRoute.Login} element={<span>Login Page</span>} />
-          <Route path={AppRoute.Favourites} element={
+          <Route path={AppRoute.Favorites} element={
             <PrivateRoute>
               <span>Private Content</span>
             </PrivateRoute>

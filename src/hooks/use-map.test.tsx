@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import { MutableRefObject } from 'react';
+import { vi, Mock } from 'vitest';
 import leaflet from 'leaflet';
 import useMap from './use-map';
 import { City } from '../types/offer-info';
-import { vi, Mock } from 'vitest';
 
 vi.mock('leaflet', () => {
   const mapInstance = {

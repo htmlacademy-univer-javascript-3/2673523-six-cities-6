@@ -1,4 +1,4 @@
-import {FullOffer, Reviews, ShortOffers} from './offer-info.ts';
+import {FullOffer, Reviews, ShortOffers} from './offer-info';
 
 export type AppData = {
   offers: ShortOffers;

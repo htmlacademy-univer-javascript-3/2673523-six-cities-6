@@ -1,6 +1,6 @@
-import PlaceCard from '../place-card/place-card.tsx';
-import {ShortOffers} from '../../types/offer-info.ts';
-import {PlaceCardVariant} from '../../types/place-card-types.ts';
+import PlaceCard from '../place-card/place-card';
+import {ShortOffers} from '../../types/offer-info';
+import {PlaceCardVariant} from '../../types/place-card-types';
 
 type PlacesListProps = {
   offers: ShortOffers;
