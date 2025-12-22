@@ -5,7 +5,7 @@ import { City } from '../../types/offer-info';
 import { Points } from '../../types/map-types';
 import { Marker } from 'leaflet';
 import useMap from '../../hooks/use-map';
-import { currentCustomIcon, defaultCustomIcon } from '../../types/map-types';
+import {CURRENT_CUSTOM_ICON, DEFAULT_CUSTOM_ICON} from '../../const';
 
 vi.mock('../../hooks/use-map', () => ({
   default: vi.fn(),
@@ -84,8 +84,8 @@ describe('Component: Map', () => {
     const secondMarker = markerResults[1].value as Marker;
     const thirdMarker = markerResults[2].value as Marker;
 
-    expect(firstMarker.setIcon).toHaveBeenCalledWith(defaultCustomIcon);
-    expect(secondMarker.setIcon).toHaveBeenCalledWith(currentCustomIcon);
-    expect(thirdMarker.setIcon).toHaveBeenCalledWith(defaultCustomIcon);
+    expect(firstMarker.setIcon).toHaveBeenCalledWith(DEFAULT_CUSTOM_ICON);
+    expect(secondMarker.setIcon).toHaveBeenCalledWith(CURRENT_CUSTOM_ICON);
+    expect(thirdMarker.setIcon).toHaveBeenCalledWith(DEFAULT_CUSTOM_ICON);
   });
 });
