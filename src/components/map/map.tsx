@@ -1,8 +1,9 @@
-import {type City} from '../../types/offer-info.ts';
-import {currentCustomIcon, defaultCustomIcon, Point, Points} from '../../types/map-types.ts';
-import {useEffect, useRef} from 'react';
-import useMap from '../../hooks/use-map.tsx';
 import {layerGroup, Marker} from 'leaflet';
+import {type City} from '../../types/offer-info';
+import {Point, Points} from '../../types/map-types';
+import {useEffect, useRef} from 'react';
+import useMap from '../../hooks/use-map';
+import {CURRENT_CUSTOM_ICON, DEFAULT_CUSTOM_ICON} from '../../const';
 import 'leaflet/dist/leaflet.css';
 
 type MapProps = {
@@ -14,7 +15,7 @@ type MapProps = {
 function Map(props: MapProps): JSX.Element {
   const { city, points, selectedPoint } = props;
 
-  const mapRef = useRef(null);
+  const mapRef = useRef<HTMLDivElement>(null);
   const map = useMap(mapRef, city);
   const markersRef = useRef<Marker[]>([]);
 
@@ -43,9 +44,9 @@ function Map(props: MapProps): JSX.Element {
         const point = points[index];
         if (point) {
           marker.setIcon(
-            selectedPoint !== undefined && point.id === selectedPoint.id
-              ? currentCustomIcon
-              : defaultCustomIcon
+            selectedPoint && point.id === selectedPoint.id
+              ? CURRENT_CUSTOM_ICON
+              : DEFAULT_CUSTOM_ICON
           );
         }
       });

@@ -1,19 +1,25 @@
-import { useParams, useNavigate } from 'react-router-dom'; // Добавляем useNavigate
-import {useEffect, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
+import {useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import Header from '../../components/header/header.tsx';
-import CommentForm from '../../components/comment-form/comment-form.tsx';
-import ReviewList from '../../components/review-list/review-list.tsx';
-import Map from '../../components/map/map.tsx';
-import PlacesList from '../../components/places-list/places-list.tsx';
-import LoadingPage from '../loading-page/loading-page.tsx';
-import { ShortOffer } from '../../types/offer-info.ts';
-import { Point } from '../../types/map-types.ts';
-import { PlaceCardVariant } from '../../types/place-card-types.ts';
-import {AuthStatus, AppRoute, MAX_NEARBY_OFFERS} from '../../const.ts';
-import {changeFavoriteStatusAction, fetchOfferAction} from '../../store/api-actions.ts';
-import {getNearbyOffers, getOffer, getOfferDataLoadingStatus, getReviews} from '../../store/app-data/selectors.ts';
-import {getAuthStatus} from '../../store/user-process/selectors.ts';
+import Header from '../../components/header/header';
+import CommentForm from '../../components/comment-form/comment-form';
+import ReviewList from '../../components/review-list/review-list';
+import Map from '../../components/map/map';
+import PlacesList from '../../components/places-list/places-list';
+import LoadingPage from '../loading-page/loading-page';
+import {Point} from '../../types/map-types';
+import {PlaceCardVariant} from '../../types/place-card-types';
+import {
+  AppRoute,
+  AuthStatus,
+  FavoriteStatus,
+  MAX_NEARBY_OFFERS,
+  MAX_OFFER_IMAGES,
+  MAX_OFFER_REVIEWS, RATING_MULTIPLIER
+} from '../../const';
+import {changeFavoriteStatusAction, fetchOfferAction} from '../../store/api-actions';
+import {getNearbyOffers, getOffer, getOfferDataLoadingStatus, getReviews} from '../../store/app-data/selectors';
+import {getAuthStatus} from '../../store/user-process/selectors';
 
 function OfferScreen(): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -26,7 +32,6 @@ function OfferScreen(): JSX.Element {
   const isOfferLoading = useAppSelector(getOfferDataLoadingStatus);
   const authStatus = useAppSelector(getAuthStatus);
 
-  const [activeNearbyOffer, setActiveNearbyOffer] = useState<ShortOffer | undefined>(undefined);
   useEffect(() => {
     if (id) {
       dispatch(fetchOfferAction(id));
@@ -45,22 +50,17 @@ function OfferScreen(): JSX.Element {
 
     dispatch(changeFavoriteStatusAction({
       offerId: fullOffer.id,
-      status: fullOffer.isFavorite ? 0 : 1
+      status: fullOffer.isFavorite ? FavoriteStatus.Removed : FavoriteStatus.Added
     }));
   };
 
   const nearbyOffersSlice = nearbyOffers.slice(0, MAX_NEARBY_OFFERS);
 
   const sortedReviews = [...reviews]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 10);
-
-  const handleNearbyCardHover = (offerId: string | null) => {
-    const newActiveOffer = nearbyOffersSlice.find((offer) => offer.id === offerId);
-    setActiveNearbyOffer(newActiveOffer);
-  };
+    .slice(0, MAX_OFFER_REVIEWS);
 
   const offersForMap = [...nearbyOffersSlice, fullOffer];
+
   const points: Point[] = offersForMap.map((offer) => ({
     id: offer.id,
     title: offer.title,
@@ -69,14 +69,14 @@ function OfferScreen(): JSX.Element {
   }));
 
   const selectedPoint: Point = {
-    id: activeNearbyOffer?.id || fullOffer.id,
-    title: activeNearbyOffer?.title || fullOffer.title,
-    lat: activeNearbyOffer?.location.latitude || fullOffer.location.latitude,
-    lng: activeNearbyOffer?.location.longitude || fullOffer.location.longitude,
+    id: fullOffer.id,
+    title: fullOffer.title,
+    lat: fullOffer.location.latitude,
+    lng: fullOffer.location.longitude,
   };
 
   const { images, isPremium, title, isFavorite, rating, type, bedrooms, maxAdults, price, goods, host, description } = fullOffer;
-  const ratingWidth = `${Math.round(rating) * 20}%`;
+  const ratingWidth = `${Math.round(rating) * RATING_MULTIPLIER}%`;
 
   return (
     <div className="page">
@@ -86,7 +86,7 @@ function OfferScreen(): JSX.Element {
         <section className="offer">
           <div className="offer__gallery-container container">
             <div className="offer__gallery">
-              {images.slice(0, 6).map((imageSrc) => (
+              {images.slice(0, MAX_OFFER_IMAGES).map((imageSrc) => (
                 <div key={imageSrc} className="offer__image-wrapper">
                   <img className="offer__image" src={imageSrc} alt={title} />
                 </div>
@@ -121,9 +121,17 @@ function OfferScreen(): JSX.Element {
                 <span className="offer__rating-value rating__value">{rating}</span>
               </div>
               <ul className="offer__features">
-                <li className="offer__feature offer__feature--entire">{type}</li>
-                <li className="offer__feature offer__feature--bedrooms">{bedrooms} Bedrooms</li>
-                <li className="offer__feature offer__feature--adults">Max {maxAdults} adults</li>
+                <li className="offer__feature offer__feature--entire" style={{ textTransform: 'capitalize' }}>
+                  {type}
+                </li>
+
+                <li className="offer__feature offer__feature--bedrooms">
+                  {bedrooms} {bedrooms > 1 ? 'Bedrooms' : 'Bedroom'}
+                </li>
+
+                <li className="offer__feature offer__feature--adults">
+                  Max {maxAdults} {maxAdults > 1 ? 'adults' : 'adult'}
+                </li>
               </ul>
               <div className="offer__price">
                 <b className="offer__price-value">&euro;{price}</b>
@@ -171,8 +179,8 @@ function OfferScreen(): JSX.Element {
               <PlacesList
                 offers={nearbyOffersSlice}
                 variant={PlaceCardVariant.NearPlaces}
-                onCardHover={handleNearbyCardHover}
-                activeOfferId={activeNearbyOffer?.id || null}
+                onCardHover={() => {}}
+                activeOfferId={null}
               />
             </div>
           </section>

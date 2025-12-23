@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ShortOffer } from '../../types/offer-info';
 import { useAppDispatch } from '../../hooks';
 import { changeFavoriteStatusAction } from '../../store/api-actions';
-import { AppRoute } from '../../const';
+import {AppRoute, FavoriteStatus, RATING_MULTIPLIER} from '../../const';
 
 type FavoriteCardProps = {
   offer: ShortOffer;
@@ -10,14 +10,14 @@ type FavoriteCardProps = {
 
 function FavoriteCard({ offer }: FavoriteCardProps): JSX.Element {
   const { id, title, type, price, previewImage, isPremium, rating } = offer;
-  const ratingWidth = `${Math.round(rating) * 20}%`;
+  const ratingWidth = `${Math.round(rating) * RATING_MULTIPLIER}%`;
 
   const dispatch = useAppDispatch();
 
   const handleBookmarkClick = () => {
     dispatch(changeFavoriteStatusAction({
       offerId: id,
-      status: 0
+      status: FavoriteStatus.Removed
     }));
   };
 
@@ -60,14 +60,14 @@ function FavoriteCard({ offer }: FavoriteCardProps): JSX.Element {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: ratingWidth }}></span>
+            <span style={{ width: ratingWidth }} data-testid="rating-stars"></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
           <Link to={offerLink}>{title}</Link>
         </h2>
-        <p className="place-card__type">{type}</p>
+        <p className="place-card__type" style={{ textTransform: 'capitalize' }}>{type}</p>
       </div>
     </article>
   );

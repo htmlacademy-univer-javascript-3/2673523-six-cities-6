@@ -1,14 +1,15 @@
-import {useEffect, useMemo} from 'react';
+import { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import {useAppDispatch, useAppSelector} from '../../hooks';
-import FavoriteCard from '../../components/favourite-card/favourite-card.tsx';
-import Header from '../../components/header/header.tsx';
-import {ShortOffer} from '../../types/offer-info.ts';
-import { AppRoute } from '../../const.ts';
-import {fetchFavoritesAction} from '../../store/api-actions.ts';
-import {getFavorites} from '../../store/app-data/selectors.ts';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import FavoriteCard from '../../components/favourite-card/favourite-card';
+import Header from '../../components/header/header';
+import { ShortOffer } from '../../types/offer-info';
+import { AppRoute } from '../../const';
+import { fetchFavoritesAction } from '../../store/api-actions';
+import { getFavorites } from '../../store/app-data/selectors';
+import { changeCity } from '../../store/app-process/app-process';
 
-function FavouriteScreen(): JSX.Element {
+function FavoritesScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const favoriteOffers = useAppSelector(getFavorites);
 
@@ -29,6 +30,10 @@ function FavouriteScreen(): JSX.Element {
   );
 
   const isEmpty = favoriteOffers.length === 0;
+
+  const handleCityClick = (cityName: string) => {
+    dispatch(changeCity(cityName));
+  };
 
   return (
     <div className={`page ${isEmpty ? 'page--favorites-empty' : ''}`}>
@@ -52,7 +57,11 @@ function FavouriteScreen(): JSX.Element {
                   <li className="favorites__locations-items" key={city}>
                     <div className="favorites__locations locations locations--current">
                       <div className="locations__item">
-                        <Link className="locations__item-link" to={AppRoute.Root}>
+                        <Link
+                          className="locations__item-link"
+                          to={AppRoute.Root}
+                          onClick={() => handleCityClick(city)}
+                        >
                           <span>{city}</span>
                         </Link>
                       </div>
@@ -78,4 +87,4 @@ function FavouriteScreen(): JSX.Element {
   );
 }
 
-export default FavouriteScreen;
+export default FavoritesScreen;

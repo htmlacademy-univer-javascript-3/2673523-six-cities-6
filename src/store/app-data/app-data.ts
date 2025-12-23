@@ -1,6 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {NameSpace} from '../../const';
-import {FullOffer, Reviews, ShortOffers} from '../../types/offer-info';
 import {
   changeFavoriteStatusAction,
   fetchFavoritesAction,
@@ -8,17 +7,8 @@ import {
   fetchOffersAction,
   postCommentAction
 } from '../api-actions';
+import {AppData} from '../../types/app-data';
 
-type AppData = {
-  offers: ShortOffers;
-  isOffersDataLoading: boolean;
-  offer: FullOffer | null;
-  nearbyOffers: ShortOffers;
-  reviews: Reviews;
-  isOfferDataLoading: boolean;
-  isCommentPosting: boolean;
-  favorites: ShortOffers;
-};
 
 const initialState: AppData = {
   offers: [],

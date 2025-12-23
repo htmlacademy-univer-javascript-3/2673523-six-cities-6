@@ -1,5 +1,4 @@
-import {MouseEvent} from 'react';
-import {Points} from '../../types/map-types.ts';
+import {Point, Points} from '../../types/map-types';
 
 type ListProps = {
   points: Points;
@@ -9,25 +8,19 @@ type ListProps = {
 function List(props: ListProps): JSX.Element {
   const {points, onListItemHover} = props;
 
-  const handleListItemHover = (event: MouseEvent<HTMLLIElement>) => {
-    event.preventDefault();
-    onListItemHover(event.currentTarget.innerText);
-  };
-
   return (
     <ul className="list">
-      {points.map((point, index) => {
-        const keyValue = `${index}-${point.title}`;
-        return (
-          <li
-            className="list__item"
-            key={keyValue}
-            onMouseEnter={handleListItemHover}
-          >
-            {point.title}
-          </li>
-        );
-      })}
+      {points.map((point : Point) => (
+        <li
+          className="list__item"
+          key={point.id}
+          onMouseEnter={() => {
+            onListItemHover(point.title);
+          }}
+        >
+          {point.title}
+        </li>
+      ))}
     </ul>
   );
 }

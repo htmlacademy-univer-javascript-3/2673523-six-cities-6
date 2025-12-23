@@ -73,10 +73,6 @@ export type FullOffer = Omit<Offer, 'cityName' | 'hostId'> & {
   host: Host;
 };
 
-export type Offers = Offer[]
-
 export type ShortOffers = ShortOffer[]
-
-export type FullOffers = FullOffer[]
 
 export type Reviews = Review[]

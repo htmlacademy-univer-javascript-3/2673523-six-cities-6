@@ -2,18 +2,20 @@ import {NameSpace} from '../../const';
 import {State} from '../../types/state';
 import {FullOffer, Reviews, ShortOffers} from '../../types/offer-info';
 
-export const getOffers = (state: State): ShortOffers => state[NameSpace.Data].offers;
+type DataState = Pick<State, NameSpace.Data>;
 
-export const getOffersDataLoadingStatus = (state: State): boolean => state[NameSpace.Data].isOffersDataLoading;
+export const getOffers = (state: DataState): ShortOffers => state[NameSpace.Data].offers;
 
-export const getOffer = (state: State): FullOffer | null => state[NameSpace.Data].offer;
+export const getOffersDataLoadingStatus = (state: DataState): boolean => state[NameSpace.Data].isOffersDataLoading;
 
-export const getNearbyOffers = (state: State): ShortOffers => state[NameSpace.Data].nearbyOffers;
+export const getOffer = (state: DataState): FullOffer | null => state[NameSpace.Data].offer;
 
-export const getReviews = (state: State): Reviews => state[NameSpace.Data].reviews;
+export const getNearbyOffers = (state: DataState): ShortOffers => state[NameSpace.Data].nearbyOffers;
 
-export const getOfferDataLoadingStatus = (state: State): boolean => state[NameSpace.Data].isOfferDataLoading;
+export const getReviews = (state: DataState): Reviews => state[NameSpace.Data].reviews;
 
-export const getCommentPostingStatus = (state: State): boolean => state[NameSpace.Data].isCommentPosting;
+export const getOfferDataLoadingStatus = (state: DataState): boolean => state[NameSpace.Data].isOfferDataLoading;
 
-export const getFavorites = (state: State): ShortOffers => state[NameSpace.Data].favorites;
+export const getCommentPostingStatus = (state: DataState): boolean => state[NameSpace.Data].isCommentPosting;
+
+export const getFavorites = (state: DataState): ShortOffers => state[NameSpace.Data].favorites;

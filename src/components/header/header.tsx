@@ -4,8 +4,8 @@ import Logo from '../logo/logo';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { logoutAction } from '../../store/api-actions';
 import { AppRoute, AuthStatus } from '../../const';
-import {getAuthStatus, getUserData} from '../../store/user-process/selectors.ts';
-import { getFavorites } from '../../store/app-data/selectors.ts';
+import {getAuthStatus, getUserData} from '../../store/user-process/selectors';
+import { getFavorites } from '../../store/app-data/selectors';
 
 function Header(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -13,7 +13,7 @@ function Header(): JSX.Element {
   const authStatus = useAppSelector(getAuthStatus);
   const favorites = useAppSelector(getFavorites);
 
-  const handleSignOut = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleSignOutClick = (evt: React.MouseEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
     dispatch(logoutAction());
   };
@@ -28,7 +28,7 @@ function Header(): JSX.Element {
               {authStatus === AuthStatus.Auth ? (
                 <>
                   <li className="header__nav-item user">
-                    <Link className="header__nav-link header__nav-link--profile" to={AppRoute.Favourites}>
+                    <Link className="header__nav-link header__nav-link--profile" to={AppRoute.Favorites}>
                       <div
                         className="header__avatar-wrapper user__avatar-wrapper"
                         style={{ backgroundImage: user?.avatarUrl ? `url(${user.avatarUrl})` : '' }}
@@ -41,7 +41,7 @@ function Header(): JSX.Element {
                     </Link>
                   </li>
                   <li className="header__nav-item">
-                    <a className="header__nav-link" href="#" onClick={handleSignOut}>
+                    <a className="header__nav-link" href="#" onClick={handleSignOutClick}>
                       <span className="header__signout">Sign out</span>
                     </a>
                   </li>

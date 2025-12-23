@@ -3,7 +3,7 @@ import {AppRoute, AuthStatus} from '../../const';
 import {useAppSelector} from '../../hooks';
 import {ReactNode} from 'react';
 import LoadingPage from '../../pages/loading-page/loading-page';
-import {getAuthStatus} from '../../store/user-process/selectors.ts';
+import {getAuthStatus} from '../../store/user-process/selectors';
 
 type PrivateRouteProps = {
   children: ReactNode;

@@ -1,37 +1,38 @@
-import {useEffect, useState, MutableRefObject} from 'react';
-import {City} from '../types/offer-info.ts';
-import leaflet, {Map} from 'leaflet';
+import { useEffect, useState, useRef, MutableRefObject } from 'react';
+import leaflet, { Map } from 'leaflet';
+import { City } from '../types/offer-info';
 
-function useMap(mapRef: MutableRefObject<HTMLElement | null>, city : City | undefined) : Map | null {
+export const TILE_LAYER_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+export const MAP_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+function useMap(mapRef: MutableRefObject<HTMLElement | null>, city: City | undefined): Map | null {
   const [map, setMap] = useState<Map | null>(null);
 
-  useEffect(() => {
-    let instance: Map | null = null;
+  const isRenderedRef = useRef(false);
 
-    if (mapRef.current !== null) {
-      instance = leaflet.map(mapRef.current, {
-        center: { lat: 0, lng: 0 },
-        zoom: 10,
+  useEffect(() => {
+    if (mapRef.current !== null && !isRenderedRef.current && city) {
+      const instance = leaflet.map(mapRef.current, {
+        center: {
+          lat: city.location.latitude,
+          lng: city.location.longitude,
+        },
+        zoom: city.location.zoom,
       });
 
       leaflet
         .tileLayer(
-          'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+          TILE_LAYER_URL,
           {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            attribution: MAP_ATTRIBUTION,
           },
         )
         .addTo(instance);
 
       setMap(instance);
+      isRenderedRef.current = true;
     }
-
-    return () => {
-      if (instance) {
-        instance.remove();
-      }
-    };
-  }, [mapRef]);
+  }, [mapRef, city]);
 
   useEffect(() => {
     if (map && city) {

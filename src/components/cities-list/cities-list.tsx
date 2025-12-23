@@ -1,4 +1,4 @@
-import {CITIES} from '../../const.ts';
+import {CITIES} from '../../const';
 
 
 type CitiesListProps = {
